@@ -1,26 +1,23 @@
-import { createDrawerNavigator } from "@react-navigation/drawer";
-import DrawerSection from "@/components/Drawer/DrawerSection";
 import GlobalContext from "@/contexts/GlobalContext";
-
-import Login from '@/app/(pages)/Login';
-import Home from "@/app/(pages)/Home";
+import { Stack } from "expo-router";
 
 import '../global.css'
+import { SafeAreaView, StatusBar, View } from "react-native";
 
 //import { Courgette_400Regular } from "@expo-google-fonts/courgette";
-
-const Drawer = createDrawerNavigator();
 
 export default function index() {
   return (
     <GlobalContext>
-      <Drawer.Navigator
-      initialRouteName="Login"
-        screenOptions={{ headerShown: false}}
-        drawerContent={(props: any) => <DrawerSection {...props} />}>
-        <Drawer.Screen name="Login" component={Login}/>
-        <Drawer.Screen name='Home' component={Home}/>
-      </Drawer.Navigator>
+      <SafeAreaView style={{ flex: 1 }}>
+        <StatusBar backgroundColor="white" barStyle="dark-content"  />
+        <View className="h-full w-full" style={{ flex: 1 }}>
+          <Stack screenOptions={{ headerShown: false }} initialRouteName="Login">
+            <Stack.Screen name="Login"/>
+            <Stack.Screen name='Home'/>
+          </Stack>
+        </View>
+      </SafeAreaView>
     </GlobalContext>
   );
 }

@@ -9,7 +9,7 @@ export default function Login() {
     console.log(login)
     return (
       <View>
-        <Text>Login</Text>
+        <Text className='color-[black]'>Logain</Text>
         <Input/>
       </View>
     )
