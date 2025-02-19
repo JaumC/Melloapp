@@ -15,6 +15,7 @@ export default function RootLayout() {
           <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen name="Login"/>
             <Stack.Screen name='Home'/>
+            <Stack.Screen name='Cadastro'/>
             <Stack.Screen name='RecuperarSenha'/>
           </Stack>
         </View>
