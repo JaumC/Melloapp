@@ -1,5 +1,9 @@
 import { UserContext } from '@/contexts/Providers/UserProvider';
 
+import { CormorantSC_400Regular } from '@expo-google-fonts/cormorant-sc'; 
+import { Roboto_100Thin } from '@expo-google-fonts/roboto'; 
+import { useFonts } from 'expo-font';
+
 import { View, Text, TouchableOpacity } from 'react-native';
 import React, { useContext } from 'react';
 import { useRouter } from 'expo-router';
@@ -11,6 +15,11 @@ import Button from '@/app/(components)/ActionButton/ActionButton';
 export default function Login() {
   const { login }: any = useContext(UserContext);
 
+  useFonts({
+    CormorantSC_400Regular,
+    Roboto_100Thin,
+  });
+
   const handleLogin = async() => {
     await login()
   }
@@ -20,7 +29,7 @@ export default function Login() {
   return (
     <View className='flex items-center h-full w-full bg-[#fafafa]'>
       <Spacer h={80}/>
-      <Text className='font-cormorantSC text-[72px]'>MELLO</Text>
+      <Text className='font-cormorantSC text-[70px]'>MELLO</Text>
       <Spacer h={80}/>
       <Input text='EMAIL' upper={false} placeholder='Digite seu email'/>
       <View>
