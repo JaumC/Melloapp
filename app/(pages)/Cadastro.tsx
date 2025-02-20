@@ -27,12 +27,7 @@ export default function Cadastro() {
     const router = useRouter();
 
     const handleRegister = async() => {      
-        console.log(nome)  
-        console.log(nick)  
-        console.log(email)  
-        console.log(senha)  
-        console.log(confirmarSenha)  
-        console.log(profilePic)  
+
         const data = {
             name: nome,
             profilePic: profilePic,
@@ -47,7 +42,7 @@ export default function Cadastro() {
 
     return (
         <View className='bg-[#fafafa] h-full w-full'>
-            <Navbar onPress_fst={() => router.push('/Login')} icon_fst={<Feather name="chevron-left" size={24} color="#F7E5E2" />}/>
+            <Navbar onPress_fst={() => router.push('/')} icon_fst={<Feather name="chevron-left" size={24} color="#F7E5E2" />}/>
             <ScrollView showsVerticalScrollIndicator={false} className='w-full'>
                 <View className='flex items-center'>
                     <Spacer h={28}/>
@@ -58,7 +53,7 @@ export default function Cadastro() {
                         <Spacer w={22}/>
                         <View>
                             <Spacer h={10}/>
-                            <Input onChangeText={setNick} value={nick} w={193} text='NOME DE USUÁRIO' upper={false} placeholder='Digite seu Nickname'/>
+                            <Input onChangeText={setNick} value={nick} w={193} text='NOME DE USUÁRIO' placeholder='Digite seu Nickname'/>
                         </View>
                         <Spacer h={20}/>
                     </View>

@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, TouchableOpacity, StatusBar } from 'react-native'
 import React, { ReactElement } from 'react'
 
 interface NavbarProps {
@@ -12,6 +12,7 @@ interface NavbarProps {
 const Navbar = ({color='#C4A59D', icon_fst, icon_snd, onPress_fst, onPress_snd} : NavbarProps) => {
   return (
     <View style={{ backgroundColor: color}} className='h-[45px] w-full'>
+        <StatusBar backgroundColor={color} barStyle="dark-content"/>
         {icon_fst && (
             <TouchableOpacity onPress={onPress_fst} className='flex items-center justify-center h-full w-[45px]'>
                 {icon_fst}

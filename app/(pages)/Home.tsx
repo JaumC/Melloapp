@@ -1,10 +1,16 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import { View, Text, Pressable } from 'react-native'
+import React, { useContext } from 'react'
+import { UserContext } from '@/contexts/Providers/UserProvider'
 
 export default function HomeScreen() {
+  const { logout } = useContext(UserContext)
   return (
     <View>
-      <Text>Home</Text>
+      <Pressable onPress={() => logout()}>
+          <Text>
+            Home
+          </Text>
+        </Pressable>
     </View>
   )
 }
