@@ -1,14 +1,14 @@
 import { View, Text, TouchableOpacity } from 'react-native'
+import { useRouter } from 'expo-router';
 import React from 'react'
-import { useNavigation } from '@react-navigation/native';
 
 export default function RecuperarSenha() {
 
-    const navigation: any = useNavigation();
+    const router = useRouter();
 
   return (
     <View>
-      <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+      <TouchableOpacity onPress={() => router.push('/')}>
         <Text>RecuperarSenha</Text>
         </TouchableOpacity>
     </View>

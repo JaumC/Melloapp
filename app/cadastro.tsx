@@ -1,18 +1,14 @@
 import { UserContext } from '@/contexts/Providers/UserProvider';
 
-import { View, Text, ScrollView } from 'react-native'
+import { View, Text, ScrollView, StatusBar } from 'react-native'
 
-import ActionButton from '../(components)/ActionButton/ActionButton'
-import AddButton from '../(components)/AddButton/AddButton'
-import Spacer from '../(components)/Spacer/Spacer'
-import Navbar from '../(components)/Navbar/Navbar'
-import Input from '../(components)/Input/Input'
-import Line from '../(components)/Line/Line'
-
-import Feather from '@expo/vector-icons/Feather';
+import ActionButton from '@/app/components/Buttons/ActionButton'
+import AddButton from '@/app/components/Buttons/AddButton'
+import Spacer from '@/app/components/Spacer/Spacer'
+import Input from '@/app/components/Input/Input'
+import Line from '@/app/components/Line/Line'
 
 import React, { useContext, useState } from 'react'
-import { useRouter } from 'expo-router';
 
 export default function Cadastro() {
     const { createUser }: any = useContext(UserContext);
@@ -23,8 +19,6 @@ export default function Cadastro() {
     const [profilePic, setProfilePic] = useState('vazio');
     const [senha, setSenha] = useState('');
     const [confirmarSenha, setConfirmarSenha] = useState('');
-
-    const router = useRouter();
 
     const handleRegister = async() => {      
 
@@ -42,7 +36,7 @@ export default function Cadastro() {
 
     return (
         <View className='bg-[#fafafa] h-full w-full'>
-            <Navbar onPress_fst={() => router.push('/')} icon_fst={<Feather name="chevron-left" size={24} color="#F7E5E2" />}/>
+            <StatusBar barStyle="light-content" backgroundColor="#C4A59D" />
             <ScrollView showsVerticalScrollIndicator={false} className='w-full'>
                 <View className='flex items-center'>
                     <Spacer h={28}/>

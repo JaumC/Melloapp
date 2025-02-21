@@ -47,7 +47,7 @@ export default function UserSession({children}: PropsWithChildren) {
       await axios.post(`${API_URL}/user/cadastro`, data)
       .then((response) => {
         notifyToast("success", "Sucesso", response.data.message)
-        router.push('./index')
+        router.push('/')
       })
       .catch((error) => {
         if (error.response) {
@@ -71,7 +71,6 @@ export default function UserSession({children}: PropsWithChildren) {
     }
 
     const loginUser = async (email: string, password: string) => {
-      console.log('sa')
       if (!email || !password) {
         notifyToast("error", "Erro", 'Preencha todos os campos.')
         return
@@ -84,7 +83,7 @@ export default function UserSession({children}: PropsWithChildren) {
       
         notifyToast("success", "Sucesso", response.data.message)
         setUser(response.data.user)
-        router.push('/(pages)/Home')
+        router.push('/(drawer)')
       }catch(error: string | any) {
         if (error.response) {
           notifyToast("error", "Erro", error.response.data.message)
@@ -113,7 +112,7 @@ export default function UserSession({children}: PropsWithChildren) {
         const user_data = await SecureStore.getItemAsync('user_data');
         if (token && user_data){
           setUser(JSON.parse(user_data))
-          router.push('/(pages)/Home')
+          router.push('/(drawer)')
         }
       }
       checkUser()

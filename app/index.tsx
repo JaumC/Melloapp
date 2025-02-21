@@ -1,5 +1,3 @@
-import '../global.css'
-
 import { UserContext } from '@/contexts/Providers/UserProvider';
 
 import { CormorantSC_400Regular } from '@expo-google-fonts/cormorant-sc'; 
@@ -10,11 +8,11 @@ import { View, Text, TouchableOpacity, StatusBar } from 'react-native';
 import React, { useContext, useState } from 'react';
 import { useRouter } from 'expo-router';
 
-import Input from '@/app/(components)/Input/Input';
-import Spacer from '@/app/(components)/Spacer/Spacer';
-import Button from '@/app/(components)/ActionButton/ActionButton';
+import Input from '@/app/components/Input/Input';
+import Spacer from '@/app/components/Spacer/Spacer';
+import Button from '@/app/components/Buttons/ActionButton';
 
-export default function index() {
+export default function Login() {
   const { loginUser }: any = useContext(UserContext);
 
   const [email, setEmail] = useState('')
@@ -41,13 +39,13 @@ export default function index() {
       <View>
         <Spacer h={18}/>
         <Input value={senha} onChangeText={setSenha} text='SENHA' upper={false} pass={true} placeholder='Digite sua senha'/>
-        <TouchableOpacity className='flex items-end justify-center' onPress={() => router.push('/(pages)/RecuperarSenha')}>
+        <TouchableOpacity className='flex items-end justify-center' onPress={() => router.push('/recuperarSenha')}>
           <Spacer h={9}/>
           <Text className='font-robotoThin color-[#004C72]'>Esqueci minha senha</Text>
         </TouchableOpacity>
         <Spacer h={50}/>
         <Button text='LOGAR' onPress={() => handleLogin()}/>
-        <TouchableOpacity className='flex items-center justify-center' onPress={() => router.push('/(pages)/Cadastro')}>
+        <TouchableOpacity className='flex items-center justify-center' onPress={() => router.push('/cadastro')}>
           <Spacer h={9}/>
           <Text className='font-robotoThin color-[#004C72]'>Não tem conta? Cadastre-se</Text>
         </TouchableOpacity> 
