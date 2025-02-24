@@ -1,22 +1,27 @@
-import { UserContext } from '@/contexts/Providers/UserProvider';
+import { useSession } from "@/app/contexts/UserProvider";
 
 import { CormorantSC_400Regular } from '@expo-google-fonts/cormorant-sc'; 
 import { Roboto_100Thin } from '@expo-google-fonts/roboto'; 
 import { useFonts } from 'expo-font';
 
 import { View, Text, TouchableOpacity, StatusBar } from 'react-native';
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'expo-router';
 
 import Input from '@/app/components/Input/Input';
 import Spacer from '@/app/components/Spacer/Spacer';
+import Loading from '@/app/components/Loading/Loading';
 import Button from '@/app/components/Buttons/ActionButton';
 
+
 export default function Login() {
-  const { loginUser }: any = useContext(UserContext);
+  const { loginUser } = useSession();
 
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
+  const [loading, setLoading] = useState(false);
+  
+  const router = useRouter();
 
   useFonts({
     CormorantSC_400Regular,
@@ -24,10 +29,14 @@ export default function Login() {
   });
 
   const handleLogin = async() => {
+    setLoading(true)
     await loginUser(email, senha)
+    setLoading(false)
   }
 
-  const router = useRouter();
+  if (loading){
+    return <Loading/>
+  }
 
   return (
     <View className='flex items-center h-full w-full bg-[#fafafa]'>

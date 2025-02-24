@@ -7,11 +7,12 @@ export interface User {
 }
 
 export interface UserRegister {
-  username: string;
-  name: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
+    nick: string;
+    name: string;
+    email: string;
+    password: string;
+    profilePic?: string,
+    confirmPassword: string;
 }
 
 export interface Dare {

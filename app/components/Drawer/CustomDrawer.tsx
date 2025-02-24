@@ -1,17 +1,28 @@
 import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
-import { useContext } from "react";
-import { View, ScrollView, Text, TouchableOpacity } from "react-native";
+import { View, Text } from "react-native";
 import { useRouter } from "expo-router";
-import { UserContext } from "@/contexts/Providers/UserProvider";
+import { useSession } from "@/app/contexts/UserProvider";
 import SmallButton from "@/app/components/Buttons/SmallButton";
+import ProfileButton from "@/app/components/Buttons/ProfileButton";
+import Spacer from '@/app/components/Spacer/Spacer';
 
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import Feather from '@expo/vector-icons/Feather';
+
+import { useFonts } from 'expo-font';
+import { CormorantSC_400Regular } from '@expo-google-fonts/cormorant-sc'; 
+import { Roboto_100Thin } from '@expo-google-fonts/roboto'; 
 
 export default function CustomDrawer(props: any) {
 
     const router = useRouter()
-    const { logout }: any = useContext(UserContext)
+    const { logoutUser } = useSession()
+
+    useFonts({
+      CormorantSC_400Regular,
+      Roboto_100Thin,
+    });
 
   return (
     <DrawerContentScrollView
@@ -20,40 +31,62 @@ export default function CustomDrawer(props: any) {
         contentContainerStyle={{
           marginRight: -12,
           marginLeft: -12,
+          flex: 1,
         }}
         style={{
           marginTop: -12,
           marginBottom: -12,
           padding: 0,
         }}>
-            <View className="flex flex-col justify-between">
-                <ScrollView showsVerticalScrollIndicator={false}>
-                <DrawerItem
-                label="CADASTRAR DESAFIO"
-                onPress={() => router.push("/")}
-                />
-                <DrawerItem
-                label="ADCIONAR COMPETIDOR"
-                onPress={() => router.push("/")}
-                />
-                <DrawerItem
-                label="MEUS AMIGOS"
-                onPress={() => router.push("/")}
-                />
-                <DrawerItem
-                label="HISTÓRICO DE DESAFIOS"
-                onPress={() => router.push("/")}
-                />
-                <View className="bg-[#D9D9D9] flex flex-row justify-between h-[60px] items-center">
-                    <View className="ml-[20px]">
-                        <SmallButton state={false} onPress={() => router.push('/(drawer)')} icon={<FontAwesome6 name="house-chimney" size={20} color="black" />}/>
-                    </View>
-                    <View className="mr-[20px]">
-                        <SmallButton state={true} onPress={() => logout()} icon={<FontAwesome5 name="sign-out-alt" size={20} color="black" />}/>
+        <View className="flex justify-between h-[100%]">
+              <View>
+                <View className="bg-[#C4A59D] h-[150px] flex-row items-center justify-evenly w-full">
+                  <ProfileButton w={71} h={71} onPress={() => router.push('../(tabs)/perfil')}/>
+                    <View>
+                        <Text className="font-cormorantSC text-[24px]">ACUA</Text>
+                        <Text className="font-robotoThin color-[#424040] font-[700]">acua@gmail.com</Text>
                     </View>
                 </View>
-          </ScrollView>
-            </View>
+                <Spacer h={20}/>
+
+                <DrawerItem
+                label="CADASTRAR DESAFIO"
+                onPress={() => router.push("/cadastrarDesafio")}
+                icon={() => <FontAwesome6 name="trophy" size={20} color="#424040" />}
+                style={{borderRadius: 0}}
+                />
+
+                <DrawerItem
+                label="ADCIONAR COMPETIDOR"
+                onPress={() => router.push("/adcionarCompetidor")}
+                icon={() => <FontAwesome6 name="handshake-simple" size={20} color="#424040" />}
+                style={{borderRadius: 0}}
+                />
+
+                <DrawerItem
+                label="MEUS AMIGOS"
+                onPress={() => router.push("/meusAmigos")}
+                icon={() => <FontAwesome5 name="users" size={20} color="#424040" />}
+                style={{borderRadius: 0}}
+                />
+
+                <DrawerItem
+                label="HISTÓRICO DE DESAFIOS"
+                onPress={() => router.push("/historicoDesafio")}
+                icon={() => <Feather name="clock" size={20} color="#424040" />}
+                style={{borderRadius: 0}}
+                />
+              </View>
+
+              <View className="bg-[#D9D9D9] flex flex-row justify-between h-[60px] items-center ">
+                  <View className="ml-[20px]">
+                      <SmallButton press={false} onPress={() => router.push('/home')} icon={<FontAwesome6 name="house-chimney" size={20} color="black" />}/>
+                  </View>
+                  <View className="mr-[20px]">
+                      <SmallButton press={true} onPress={logoutUser} icon={<FontAwesome5 name="sign-out-alt" size={20} color="black" />}/>
+                  </View>
+              </View>
+        </View>
     </DrawerContentScrollView>
     );
 }

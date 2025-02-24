@@ -1,6 +1,6 @@
 import React from 'react';
-import UserSession from "@/contexts/Providers/UserProvider";
-import DareSession from "@/contexts/Providers/DareProvider";
+import DareSession from './DareProvider';
+import UserSession from './UserProvider';
 
 export default function GlobalProvider({children}: any) {
 	return (

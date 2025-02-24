@@ -1,17 +1,21 @@
-import { UserContext } from '@/contexts/Providers/UserProvider';
+import { useSession } from '@/app/contexts/UserProvider';
 
 import { View, Text, ScrollView, StatusBar } from 'react-native'
 
 import ActionButton from '@/app/components/Buttons/ActionButton'
 import AddButton from '@/app/components/Buttons/AddButton'
+import Loading from '@/app/components/Loading/Loading';
 import Spacer from '@/app/components/Spacer/Spacer'
 import Input from '@/app/components/Input/Input'
 import Line from '@/app/components/Line/Line'
 
+
 import React, { useContext, useState } from 'react'
 
 export default function Cadastro() {
-    const { createUser }: any = useContext(UserContext);
+    const { createUser } = useSession();
+
+    const [loading, setLoading] = useState(false);
 
     const [nome, setNome] = useState('');
     const [nick, setNick] = useState('');
@@ -21,7 +25,7 @@ export default function Cadastro() {
     const [confirmarSenha, setConfirmarSenha] = useState('');
 
     const handleRegister = async() => {      
-
+        setLoading(true)
         const data = {
             name: nome,
             profilePic: profilePic,
@@ -32,6 +36,11 @@ export default function Cadastro() {
         }
 
         await createUser(data)
+        setLoading(false)
+    }
+
+    if (loading){
+        return <Loading/>
     }
 
     return (

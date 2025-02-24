@@ -1,6 +1,6 @@
-import { createContext, useState, PropsWithChildren, useEffect } from 'react';
-import { notifyToast } from "../../app/utils/Toast";
-import { API_URL } from '../../app/utils/API_URL';
+import { createContext, useState, PropsWithChildren, useEffect, useContext } from 'react';
+import { notifyToast } from "../utils/Toast";
+import { API_URL } from '../utils/API_URL';
 import * as SecureStore from "expo-secure-store";
 import { User, UserRegister } from '@/typos';
 import { useRouter } from "expo-router";
@@ -12,7 +12,7 @@ interface UserProviderType {
   readUser: (id: string) => void;
   updateUser: (id: string, user: User) => void;
   deleteUser: (id: string) => void;
-  logout: () => void;
+  logoutUser: () => void;
 }
 
 export const UserContext = createContext<UserProviderType>({
@@ -22,8 +22,13 @@ export const UserContext = createContext<UserProviderType>({
   readUser: () => {},
   updateUser: () => {},
   deleteUser: () => {},
-  logout: () => {},
+  logoutUser: () => {},
 });
+
+export const useSession = () => {
+  const val = useContext(UserContext)
+  return val
+}
 
 export default function UserSession({children}: PropsWithChildren) {
     console.log('Sessão de Usuário');
@@ -83,7 +88,7 @@ export default function UserSession({children}: PropsWithChildren) {
       
         notifyToast("success", "Sucesso", response.data.message)
         setUser(response.data.user)
-        router.push('/(drawer)')
+        router.push('/home')
       }catch(error: string | any) {
         if (error.response) {
           notifyToast("error", "Erro", error.response.data.message)
@@ -93,7 +98,7 @@ export default function UserSession({children}: PropsWithChildren) {
       }
     };
     
-    const logout = async () => {
+    const logoutUser = async () => {
       try {
         await SecureStore.deleteItemAsync('token')
         await SecureStore.deleteItemAsync('user_data')
@@ -112,7 +117,7 @@ export default function UserSession({children}: PropsWithChildren) {
         const user_data = await SecureStore.getItemAsync('user_data');
         if (token && user_data){
           setUser(JSON.parse(user_data))
-          router.push('/(drawer)')
+          router.push('/home')
         }
       }
       checkUser()
@@ -127,7 +132,7 @@ export default function UserSession({children}: PropsWithChildren) {
             updateUser, 
             deleteUser, 
             loginUser, 
-            logout 
+            logoutUser 
           }}>
             {children}
         </UserContext.Provider>

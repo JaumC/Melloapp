@@ -19,16 +19,15 @@ export default function Layout() {
                     },
                     headerTintColor: '#fafafa',
                     headerRight: () => (
-                        <ProfileButton
-                            w={45}
-                            h={45}
-                            onPress={() => router.push('../(tabs)/perfil')} 
-                        />
+                        <ProfileButton w={45} h={45} onPress={() => router.push('../(tabs)/perfil')}/>
                     ),
                 }}
-                drawerContent={(props) => <CustomDrawer {...props} />}
-            >
-                <Drawer.Screen name="(drawer)/index" />
+                drawerContent={(props) => <CustomDrawer {...props} />}>
+                <Drawer.Screen name="home"/>
+                <Drawer.Screen name="cadastrarDesafio"/>
+                <Drawer.Screen name="adcionarCompetidor"/>
+                <Drawer.Screen name="meusAmigos"/>
+                <Drawer.Screen name="historicoDesafio"/>
             </Drawer>
         </GestureHandlerRootView>
     );
