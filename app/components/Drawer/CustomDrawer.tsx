@@ -41,7 +41,7 @@ export default function CustomDrawer(props: any) {
         <View className="flex justify-between h-[100%]">
               <View>
                 <View className="bg-[#C4A59D] h-[150px] flex-row items-center justify-evenly w-full">
-                  <ProfileButton w={71} h={71} onPress={() => router.push('../(tabs)/perfil')}/>
+                  <ProfileButton w={71} h={71} onPress={() => router.push('/perfil')}/>
                     <View>
                         <Text className="font-cormorantSC text-[24px]">ACUA</Text>
                         <Text className="font-robotoThin color-[#424040] font-[700]">acua@gmail.com</Text>

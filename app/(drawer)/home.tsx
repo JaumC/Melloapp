@@ -1,10 +1,6 @@
 import { View, Text, ScrollView, StatusBar } from 'react-native';
 import { useState } from 'react';
 
-import { CormorantSC_400Regular } from '@expo-google-fonts/cormorant-sc'; 
-import { Roboto_100Thin } from '@expo-google-fonts/roboto'; 
-import { useFonts } from 'expo-font';
-
 import { useRouter } from "expo-router";
 
 import AddButton from '@/app/components/Buttons/AddButton';
@@ -15,11 +11,6 @@ export default function Home() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [dare, setDare] = useState(false);
-
-  useFonts({
-    CormorantSC_400Regular,
-    Roboto_100Thin,
-  });
 
   if (loading){
     return <Loading/>

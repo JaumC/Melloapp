@@ -1,29 +1,34 @@
 import { TouchableOpacity } from 'react-native'
 import React, { ReactElement } from 'react'
 
-const shadowOpt = {
-  width: 200,
-  height: 100,
-  color: "#000",
-  border: 10,
-  radius: 5,
-  opacity: 0.2,
-  x: 0,
-  y: 0,
-  style: { marginTop: 30 }
-}
-
 interface SmallButtonProps {
-    icon?: ReactElement
-    onPress?: () => void
-    w?: number
-    h?: number
-    press?: boolean
+  icon?: ReactElement
+  onPress?: () => void
+  w?: number
+  h?: number
+  press?: boolean
 }
 
-const SmallButton = ({icon, onPress, w=35, h=35, press=false} : SmallButtonProps) =>{
+const SmallButton = ({ icon, onPress, w = 40, h = 40, press = false }: SmallButtonProps) => {
   return (
-    <TouchableOpacity style={[{ width: w, height: h }]} onPress={onPress}>
+    <TouchableOpacity
+      style={[
+        {
+          width: w,
+          height: h,
+          backgroundColor: 'white', 
+          borderRadius: 11,
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          shadowColor: '#000', 
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.25, 
+          shadowRadius: 3.5, 
+          elevation: 3,
+          borderWidth: 1,
+        },
+      ]}
+      onPress={onPress}>
       {icon}
     </TouchableOpacity>
   )

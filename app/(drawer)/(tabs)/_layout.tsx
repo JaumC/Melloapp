@@ -24,14 +24,12 @@ export default function Layout() {
             name="meusAmigos"
             options={{
                 title: 'Competidor',
-
                 tabBarIcon: ({ color }) => <FontAwesome5 name="users" size={20} color={color} />
             }}/>
             <Tabs.Screen 
             name="historicoDesafio"
             options={{
                 title: 'Histórico',
-
                 tabBarIcon: ({ color }) => <Feather name="clock" size={20} color={color} />
             }}/>
         </Tabs>
