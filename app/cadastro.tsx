@@ -9,35 +9,69 @@ import Spacer from '@/app/components/Spacer/Spacer'
 import Input from '@/app/components/Input/Input'
 import Line from '@/app/components/Line/Line'
 
+import * as ImagePicker from "expo-image-picker";
+import { v4 as uuidv4 } from 'uuid';
 
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
+import { notifyToast } from './utils/Toast';
+import ProfileButton from './components/Buttons/ProfileButton';
 
 export default function Cadastro() {
     const { createUser } = useSession();
 
     const [loading, setLoading] = useState(false);
 
-    const [nome, setNome] = useState('');
+    const [name, setName] = useState('');
     const [nick, setNick] = useState('');
     const [email, setEmail] = useState('');
-    const [profilePic, setProfilePic] = useState('vazio');
-    const [senha, setSenha] = useState('');
-    const [confirmarSenha, setConfirmarSenha] = useState('');
+    const [profilePic, setProfilePic] = useState<string>("");
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
 
-    const handleRegister = async() => {      
-        setLoading(true)
-        const data = {
-            name: nome,
-            profilePic: profilePic,
-            nick: nick,
-            email: email,
-            password: senha,
-            confirmPassword: confirmarSenha
+    const pickImage = async() => {
+        const permissionResult =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (permissionResult.granted === false) {
+            notifyToast("error", "Erro", "É necessário permissão para acessar a galeria.");
+            return;
         }
 
-        await createUser(data)
-        setLoading(false)
+        const pickerResult = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ['images'],
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 0.5
+        })
+
+        if(!pickerResult.canceled){
+            setProfilePic(pickerResult.assets[0].uri)
+            console.log('pickeeeeeeeer', profilePic)
+        }
     }
+
+    const handleRegister = async () => {
+        setLoading(true);
+    
+        const data = {
+            name: name,
+            nick: nick,
+            email: email,
+            password: password,
+            confirmPassword: confirmPassword,
+            profilePic: {
+                uri: profilePic,
+                type: 'image/jpeg',
+                name: `photo-${Date.now()}-${uuidv4().slice(0, 8)}.jpg`
+            },
+        };
+
+        console.log('dataaaaaaaaaaaaaaaaaaaaaaa',data)
+    
+        await createUser(data);
+    
+        setLoading(false);
+    };
+    
 
     if (loading){
         return <Loading/>
@@ -52,7 +86,11 @@ export default function Cadastro() {
                     <Text className='font-cormorantSC text-[24px] text-center'>CADASTRO</Text>
                     <Spacer h={20}/>
                     <View className='flex flex-row justify-center'>
-                        <AddButton onPress={() => setProfilePic} text='PERFIL'/>    
+                        {profilePic ? (
+                            <ProfileButton profilePic={profilePic}/>    
+                        ):(
+                            <AddButton onPress={() => pickImage()} text='PERFIL'/>    
+                        )}
                         <Spacer w={22}/>
                         <View>
                             <Spacer h={10}/>
@@ -63,13 +101,13 @@ export default function Cadastro() {
                     <Spacer h={15}/>
                     <Line/>
                     <Spacer h={30}/>
-                    <Input onChangeText={setNome} value={nome} text='NOME' w={300} placeholder='Digite seu nome'/>
+                    <Input onChangeText={setName} value={name} text='NOME' w={300} placeholder='Digite seu nome'/>
                     <Spacer h={20}/>
                     <Input onChangeText={setEmail} upper={false} value={email} text='EMAIL' w={300}  placeholder='Digite seu email'/>
                     <Spacer h={20}/>
-                    <Input onChangeText={setSenha} upper={false} pass={true} value={senha} text='SENHA' w={300} placeholder='Digite sua senha'/>
+                    <Input onChangeText={setPassword} upper={false} pass={true} value={password} text='SENHA' w={300} placeholder='Digite sua senha'/>
                     <Spacer h={20}/>
-                    <Input onChangeText={setConfirmarSenha} upper={false} pass={true} value={confirmarSenha} text='CONFIRMAR SENHA' w={300} placeholder='Confirme sua senha'/>
+                    <Input onChangeText={setConfirmPassword} upper={false} pass={true} value={confirmPassword} text='CONFIRMAR SENHA' w={300} placeholder='Confirme sua senha'/>
                     <View>
                         <Spacer h={50}/>
                         <ActionButton w={300} text='CADASTRAR' onPress={() => handleRegister()}/>

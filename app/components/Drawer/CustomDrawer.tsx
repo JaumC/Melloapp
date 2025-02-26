@@ -13,16 +13,33 @@ import Feather from '@expo/vector-icons/Feather';
 import { useFonts } from 'expo-font';
 import { CormorantSC_400Regular } from '@expo-google-fonts/cormorant-sc'; 
 import { Roboto_100Thin } from '@expo-google-fonts/roboto'; 
+import { useEffect, useState } from "react";
 
 export default function CustomDrawer(props: any) {
 
     const router = useRouter()
-    const { logoutUser } = useSession()
+    const { logoutUser, readUser } = useSession()
+
+    const [ nick, setNick ] = useState('')
+    const [ profilePic, setProfilePic ] = useState('')
+    const [ email, setEmail ] = useState('')
+
+    const handleUserInfos = async() => {
+      const userInfos: any = await readUser()
+
+      setNick(userInfos.nickname)
+      setProfilePic(userInfos.profilePic)
+      setEmail(userInfos.email)
+    }
 
     useFonts({
       CormorantSC_400Regular,
       Roboto_100Thin,
     });
+
+    useEffect(() => {
+      handleUserInfos()
+    }, [nick, email, profilePic])
 
   return (
     <DrawerContentScrollView
@@ -43,8 +60,8 @@ export default function CustomDrawer(props: any) {
                 <View className="bg-[#C4A59D] h-[150px] flex-row items-center justify-evenly w-full">
                   <ProfileButton w={71} h={71} onPress={() => router.push('/perfil')}/>
                     <View>
-                        <Text className="font-cormorantSC text-[24px]">ACUA</Text>
-                        <Text className="font-robotoThin color-[#424040] font-[700]">acua@gmail.com</Text>
+                        <Text className="font-cormorantSC text-[24px]">{nick.toUpperCase()}</Text>
+                        <Text className="font-robotoThin color-[#424040] font-[700]">{email}</Text>
                     </View>
                 </View>
                 <Spacer h={20}/>

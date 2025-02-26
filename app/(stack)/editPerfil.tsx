@@ -1,23 +1,43 @@
 import { View, Text, StatusBar, ScrollView } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 import ProfileButton from '@/app/components/Buttons/ProfileButton'
 import ActionButton from '@/app/components/Buttons/ActionButton'
-import InputText from '@/app/components/Input/InputText'
+import Input from '@/app/components/Input/Input'
 import Spacer from '@/app/components/Spacer/Spacer';
 import Line from '@/app/components/Line/Line'
 
-import Feather from '@expo/vector-icons/Feather';
-
-import { useRouter } from 'expo-router'
+import { useRouter, useGlobalSearchParams } from 'expo-router'
+import { useSession } from '@/app/contexts/UserProvider'
 
 export default function EditPerfil() {
 
   const router = useRouter()
+  const { name, nick, email, profilePic }: any = useGlobalSearchParams();
+  
+  const [ newNick, setNewNick ] = useState(nick || '')
+  const [ newName, setNewName ] = useState(name || '')
+  const [ newEmail, setNewEmail ] = useState( email || '')
+  const [ newProfilePic, setNewProfilePic ] = useState(profilePic || '')
 
-  const handleEditUser = () => {
-    
+  const { updateUser } =  useSession()
+
+  const handleEditUser = async() => {
+    const uptadeData = {
+      nickname: newNick,
+      name: newName,
+      email: newEmail,
+      profilePic: newProfilePic,
+    }
+    await updateUser(uptadeData)
   }
+
+  useEffect(() => {
+    setNewEmail(email || '')
+    setNewNick(nick || '')
+    setNewName(name || '')
+    setNewProfilePic(profilePic || '')
+  }, [nick, name, email, profilePic])
 
   return (
     <View className='bg-[#fafafa] flex h-full w-full items-center '>
@@ -35,11 +55,11 @@ export default function EditPerfil() {
         <Spacer h={60}/>
         <Line/>
         <Spacer h={25}/> 
-        <InputText text='ACUA' header='NOME DE USUÁRIO'/>
+        <Input text='NOME DE USUÁRIO' value={newNick} onChangeText={setNewNick}/>
         <Spacer h={35}/> 
-        <InputText text='JOÂO VITOR VIANA CHAVES' header='NOME'/>
+        <Input text='NOME' value={newName} onChangeText={setNewName}/>
         <Spacer h={35}/> 
-        <InputText text='JVVIANACHAVES@GMAIL.COM' header='EMAIL'/>
+        <Input text='EMAIL' value={newEmail} onChangeText={setNewEmail}/>
         
         <Spacer h={114}/> 
         <ActionButton text='RESETAR' color='#6E7687' onPress={() => router.back()}/>

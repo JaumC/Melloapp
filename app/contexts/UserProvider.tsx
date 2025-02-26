@@ -9,8 +9,8 @@ interface UserProviderType {
   user: User | null;
   loginUser: (email: string, password: string) => void;
   createUser: (data: UserRegister) => void;
-  readUser: (id: string) => void;
-  updateUser: (id: string, user: User) => void;
+  readUser: () => void;
+  updateUser: (data: User) => void;
   deleteUser: (id: string) => void;
   logoutUser: () => void;
 }
@@ -49,7 +49,7 @@ export default function UserSession({children}: PropsWithChildren) {
           return
       }
 
-      await axios.post(`${API_URL}/user/cadastro`, data)
+      await axios.post(`${API_URL}/user/create`, data)
       .then((response) => {
         notifyToast("success", "Sucesso", response.data.message)
         router.push('/')
@@ -64,11 +64,33 @@ export default function UserSession({children}: PropsWithChildren) {
     }
 
     const readUser = async () => {
+      try{
+        const response = await axios.get(`${API_URL}/user/read/${user?.id}`)
+        return response.data
 
+      }catch(error: any){
+        if (error.response) {
+          notifyToast("error", "Erro", error.response.data.message)
+        } else {
+          notifyToast("error", "Erro", 'Erro ao obter dados do usuário.')
+        }
+
+      }
     };
 
-    const updateUser = async () => {
-  
+    const updateUser = async (data: User) => {
+      await axios.post(`${API_URL}/user/update/${user?.id}`, data)
+      .then((response) => {
+        notifyToast('success', 'Sucesso', response.data.message)
+        router.push('/home')
+      })
+      .catch((error) => {
+        if(error.response){
+          notifyToast('error', 'Erro', error.response.data.message)
+        }else{
+          notifyToast('error', 'Error', 'Não foi possível atualizar os dados.')
+        }
+      })
     };
 
     const deleteUser = async () => {
