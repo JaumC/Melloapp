@@ -8,7 +8,7 @@ import axios from "axios";
 interface UserProviderType {
   user: User | null;
   loginUser: (email: string, password: string) => void;
-  createUser: (data: UserRegister) => void;
+  createUser: (data: FormData) => void;
   readUser: () => void;
   updateUser: (data: User) => void;
   deleteUser: (id: string) => void;
@@ -37,31 +37,42 @@ export default function UserSession({children}: PropsWithChildren) {
 
     const [user, setUser] = useState<User | null>(null);
 
-    const createUser = async (data: UserRegister) => {
-      if (!data.name || !data.email || !data.password || !data.confirmPassword) {
-        notifyToast("error", "Erro", 'Preencha todos os campos.')
-        return
+    const createUser = async (formData: any) => {
+      const name = formData.get("name");
+      const email = formData.get("email");
+      const password = formData.get("password");
+      const confirmPassword = formData.get("confirmPassword");
+    
+      if (!name || !email || !password || !confirmPassword) {
+        notifyToast("error", "Erro", 'Preencha todos os campos.');
+        return;
       }
-      
-      if (data.password !== data.confirmPassword) {
-          alert('As senhas não coincidem')
-          notifyToast("error", "Erro", 'As senhas não coincidem.')
-          return
+    
+      if (password !== confirmPassword) {
+        alert('As senhas não coincidem');
+        notifyToast("error", "Erro", 'As senhas não coincidem.');
+        return;
       }
-
-      await axios.post(`${API_URL}/user/create`, data)
+    
+      await axios.post(`${API_URL}/user/create`, formData, {
+        headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      withCredentials: true})
       .then((response) => {
-        notifyToast("success", "Sucesso", response.data.message)
-        router.push('/')
+        notifyToast("success", "Sucesso", response.data.message);
+        router.push('/');
       })
       .catch((error) => {
         if (error.response) {
-          notifyToast("error", "Erro", error.response.data.message)
+          notifyToast("error", "Erro", error.response.data.message);
         } else {
-          notifyToast("error", "Erro", 'Erro ao se conectar com o servidor.')
+          notifyToast("error", "Erro", 'Erro ao se conectar com o servidor.');
         }
-      })
-    }
+      });
+    };
+    
+    
 
     const readUser = async () => {
       try{

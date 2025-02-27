@@ -1,6 +1,6 @@
 import { useSession } from '@/app/contexts/UserProvider';
 
-import { View, Text, ScrollView, StatusBar } from 'react-native'
+import { View, Text, ScrollView, StatusBar, TouchableOpacity } from 'react-native'
 
 import ActionButton from '@/app/components/Buttons/ActionButton'
 import AddButton from '@/app/components/Buttons/AddButton'
@@ -17,7 +17,7 @@ import { notifyToast } from './utils/Toast';
 import ProfileButton from './components/Buttons/ProfileButton';
 
 export default function Cadastro() {
-    const { createUser } = useSession();
+    const { createUser, user } = useSession();
 
     const [loading, setLoading] = useState(false);
 
@@ -45,33 +45,29 @@ export default function Cadastro() {
 
         if(!pickerResult.canceled){
             setProfilePic(pickerResult.assets[0].uri)
-            console.log('pickeeeeeeeer', profilePic)
         }
     }
 
     const handleRegister = async () => {
         setLoading(true);
-    
-        const data = {
-            name: name,
-            nick: nick,
-            email: email,
-            password: password,
-            confirmPassword: confirmPassword,
-            profilePic: {
-                uri: profilePic,
-                type: 'image/jpeg',
-                name: `photo-${Date.now()}-${uuidv4().slice(0, 8)}.jpg`
-            },
-        };
 
-        console.log('dataaaaaaaaaaaaaaaaaaaaaaa',data)
+        const formData = new FormData();
+
+        formData.append("name", name);
+        formData.append("nickname", nick);
+        formData.append("email", email);
+        formData.append("password", password);
+        formData.append("confirmPassword", confirmPassword);
+        formData.append("file", {
+            uri: profilePic,
+            type: "image/jpeg",
+            name: `photo-${Date.now()}.jpg`,
+            } as any);
     
-        await createUser(data);
+        await createUser(formData);
     
         setLoading(false);
     };
-    
 
     if (loading){
         return <Loading/>
@@ -85,9 +81,9 @@ export default function Cadastro() {
                     <Spacer h={28}/>
                     <Text className='font-cormorantSC text-[24px] text-center'>CADASTRO</Text>
                     <Spacer h={20}/>
-                    <View className='flex flex-row justify-center'>
+                    <TouchableOpacity className='flex flex-row justify-center'>
                         {profilePic ? (
-                            <ProfileButton profilePic={profilePic}/>    
+                            <ProfileButton onPress={() => pickImage()} profilePic={profilePic}/>    
                         ):(
                             <AddButton onPress={() => pickImage()} text='PERFIL'/>    
                         )}
@@ -97,7 +93,7 @@ export default function Cadastro() {
                             <Input onChangeText={setNick} value={nick} w={193} text='NOME DE USUÁRIO' placeholder='Digite seu Nickname'/>
                         </View>
                         <Spacer h={20}/>
-                    </View>
+                    </TouchableOpacity>
                     <Spacer h={15}/>
                     <Line/>
                     <Spacer h={30}/>
