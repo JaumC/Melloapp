@@ -2,7 +2,7 @@ import { createContext, useState, PropsWithChildren, useEffect, useContext } fro
 import { notifyToast } from "../utils/Toast";
 import { API_URL } from '../utils/API_URL';
 import * as SecureStore from "expo-secure-store";
-import { User, UserRegister } from '@/typos';
+import { User } from '@/typos';
 import { useRouter } from "expo-router";
 import axios from "axios";
 interface UserProviderType {
@@ -10,6 +10,7 @@ interface UserProviderType {
   loginUser: (email: string, password: string) => void;
   createUser: (data: FormData) => void;
   readUser: () => void;
+  readUserPhoto: () => void;
   updateUser: (data: User) => void;
   deleteUser: (id: string) => void;
   logoutUser: () => void;
@@ -20,6 +21,7 @@ export const UserContext = createContext<UserProviderType>({
   loginUser: () => {},
   createUser: () => {},
   readUser: () => {},
+  readUserPhoto: () => {},
   updateUser: () => {},
   deleteUser: () => {},
   logoutUser: () => {},
@@ -88,6 +90,24 @@ export default function UserSession({children}: PropsWithChildren) {
 
       }
     };
+
+    const readUserPhoto = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/user/photo/${user?.id}`, { responseType: 'blob' })
+        
+        const imageBlob = response.data
+        const imageUrl = URL.createObjectURL(imageBlob);
+        
+        return imageUrl; 
+      } catch (error: any) {
+        if (error.response) {
+          notifyToast("error", "Erro", error.response.data.message);
+        } else {
+          notifyToast("error", "Erro", 'Erro ao obter imagem do usuário.');
+        }
+      }
+    };
+    
 
     const updateUser = async (data: User) => {
       await axios.post(`${API_URL}/user/update/${user?.id}`, data)
@@ -165,7 +185,8 @@ export default function UserSession({children}: PropsWithChildren) {
             updateUser, 
             deleteUser, 
             loginUser, 
-            logoutUser 
+            logoutUser,
+            readUserPhoto,
           }}>
             {children}
         </UserContext.Provider>

@@ -5,10 +5,26 @@ import CustomDrawer from "@/app/components/Drawer/CustomDrawer";
 import ProfileButton from '@/app/components/Buttons/ProfileButton';
 import Spacer from '@/app/components/Spacer/Spacer';
 import { useRouter } from 'expo-router';
+import { useSession } from '@/app/contexts/UserProvider';
+import { useState, useEffect } from 'react';
 
 export default function Layout() {
 
     const router = useRouter()
+    const { readUserPhoto } = useSession()
+
+    const [profilePic, setProfilePic] = useState<string>("");
+
+    const imageUser = async() => {
+        const imageUser: any = await readUserPhoto()
+        
+        setProfilePic(imageUser)
+        console.log(imageUser)
+    }
+
+    useEffect(() => {
+        imageUser()
+    }, [])
 
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
@@ -21,8 +37,8 @@ export default function Layout() {
                     headerTintColor: '#fafafa',
                     headerRight: () => (
                         <>
-                        <ProfileButton w={45} h={45} onPress={() => router.push('/(stack)/perfil')}/>
-                        <Spacer w={20}/>
+                            <ProfileButton profilePic={profilePic} w={45} h={45} onPress={() => router.push('/(stack)/perfil')}/>
+                            <Spacer w={20}/>
                         </>
                     ),
                 }}
