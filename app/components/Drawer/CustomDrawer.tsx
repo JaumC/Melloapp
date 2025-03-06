@@ -14,11 +14,12 @@ import { useFonts } from 'expo-font';
 import { CormorantSC_400Regular } from '@expo-google-fonts/cormorant-sc'; 
 import { Roboto_100Thin } from '@expo-google-fonts/roboto'; 
 import { useEffect, useState } from "react";
+import { API_URL } from "@/app/utils/API_URL";
 
 export default function CustomDrawer(props: any) {
 
     const router = useRouter()
-    const { logoutUser, readUser } = useSession()
+    const { logoutUser, readUser, user } = useSession()
 
     const [ nick, setNick ] = useState('')
     const [ profilePic, setProfilePic ] = useState('')
@@ -28,9 +29,15 @@ export default function CustomDrawer(props: any) {
       const userInfos: any = await readUser()
 
       setNick(userInfos.nickname)
-      setProfilePic(userInfos.profilePic)
       setEmail(userInfos.email)
     }
+
+    const imageUser = async() => {
+        if (user && user.profilePic) {
+            const imageUrl = `${API_URL}/user/photo/${user.id}`;
+            setProfilePic(imageUrl);
+        }
+    };
 
     useFonts({
       CormorantSC_400Regular,
@@ -39,7 +46,11 @@ export default function CustomDrawer(props: any) {
 
     useEffect(() => {
       handleUserInfos()
-    }, [nick, email, profilePic])
+    }, [nick, email])
+
+    useEffect(() => {
+        imageUser();
+    }, [profilePic]);
 
   return (
     <DrawerContentScrollView
@@ -58,7 +69,7 @@ export default function CustomDrawer(props: any) {
         <View className="flex justify-between h-[100%]">
               <View>
                 <View className="bg-[#C4A59D] h-[150px] flex-row items-center justify-evenly w-full">
-                  <ProfileButton w={71} h={71} onPress={() => router.push('/perfil')}/>
+                  <ProfileButton profilePic={profilePic} w={71} h={71} onPress={() => router.push('/perfil')}/>
                     <View>
                         <Text className="font-cormorantSC text-[24px]">{nick.toUpperCase()}</Text>
                         <Text className="font-robotoThin color-[#424040] font-[700]">{email}</Text>

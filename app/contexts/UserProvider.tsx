@@ -10,8 +10,7 @@ interface UserProviderType {
   loginUser: (email: string, password: string) => void;
   createUser: (data: FormData) => void;
   readUser: () => void;
-  readUserPhoto: () => void;
-  updateUser: (data: User) => void;
+  updateUser: (data: FormData) => void;
   deleteUser: (id: string) => void;
   logoutUser: () => void;
 }
@@ -21,7 +20,6 @@ export const UserContext = createContext<UserProviderType>({
   loginUser: () => {},
   createUser: () => {},
   readUser: () => {},
-  readUserPhoto: () => {},
   updateUser: () => {},
   deleteUser: () => {},
   logoutUser: () => {},
@@ -51,7 +49,6 @@ export default function UserSession({children}: PropsWithChildren) {
       }
     
       if (password !== confirmPassword) {
-        alert('As senhas não coincidem');
         notifyToast("error", "Erro", 'As senhas não coincidem.');
         return;
       }
@@ -73,8 +70,6 @@ export default function UserSession({children}: PropsWithChildren) {
         }
       });
     };
-    
-    
 
     const readUser = async () => {
       try{
@@ -91,26 +86,12 @@ export default function UserSession({children}: PropsWithChildren) {
       }
     };
 
-    const readUserPhoto = async () => {
-      try {
-        const response = await axios.get(`${API_URL}/user/photo/${user?.id}`, { responseType: 'blob' })
-        
-        const imageBlob = response.data
-        const imageUrl = URL.createObjectURL(imageBlob);
-        
-        return imageUrl; 
-      } catch (error: any) {
-        if (error.response) {
-          notifyToast("error", "Erro", error.response.data.message);
-        } else {
-          notifyToast("error", "Erro", 'Erro ao obter imagem do usuário.');
-        }
-      }
-    };
-    
-
-    const updateUser = async (data: User) => {
-      await axios.post(`${API_URL}/user/update/${user?.id}`, data)
+    const updateUser = async (updateData: any) => {
+      await axios.post(`${API_URL}/user/update/${user?.id}`, updateData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true})
       .then((response) => {
         notifyToast('success', 'Sucesso', response.data.message)
         router.push('/home')
@@ -186,7 +167,6 @@ export default function UserSession({children}: PropsWithChildren) {
             deleteUser, 
             loginUser, 
             logoutUser,
-            readUserPhoto,
           }}>
             {children}
         </UserContext.Provider>

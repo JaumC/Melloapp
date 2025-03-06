@@ -10,14 +10,15 @@ import Input from '@/app/components/Input/Input'
 import Line from '@/app/components/Line/Line'
 
 import * as ImagePicker from "expo-image-picker";
-import { v4 as uuidv4 } from 'uuid';
 
 import React, { useState } from 'react'
 import { notifyToast } from './utils/Toast';
 import ProfileButton from './components/Buttons/ProfileButton';
 
+import { v4 as uuidv4 } from 'uuid';
+
 export default function Cadastro() {
-    const { createUser, user } = useSession();
+    const { createUser } = useSession();
 
     const [loading, setLoading] = useState(false);
 
@@ -61,7 +62,7 @@ export default function Cadastro() {
         formData.append("file", {
             uri: profilePic,
             type: "image/jpeg",
-            name: `photo-${Date.now()}.jpg`,
+            name: `${uuidv4()}.jpg`,
             } as any);
     
         await createUser(formData);

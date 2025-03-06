@@ -7,24 +7,26 @@ import Spacer from '@/app/components/Spacer/Spacer';
 import { useRouter } from 'expo-router';
 import { useSession } from '@/app/contexts/UserProvider';
 import { useState, useEffect } from 'react';
+import { Image } from 'react-native';
+import { API_URL } from '../utils/API_URL';
 
 export default function Layout() {
 
     const router = useRouter()
-    const { readUserPhoto } = useSession()
+    const { user } = useSession()
 
     const [profilePic, setProfilePic] = useState<string>("");
 
     const imageUser = async() => {
-        const imageUser: any = await readUserPhoto()
-        
-        setProfilePic(imageUser)
-        console.log(imageUser)
-    }
-
+        if (user && user.profilePic) {
+            const imageUrl = `${API_URL}/user/photo/${user.id}`;
+            setProfilePic(imageUrl);
+        }
+    };
+    
     useEffect(() => {
-        imageUser()
-    }, [])
+        imageUser();
+    }, [profilePic]);
 
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>

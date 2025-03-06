@@ -15,11 +15,13 @@ import { useSession } from '@/app/contexts/UserProvider'
 
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { notifyToast } from '@/app/utils/Toast'
+import { API_URL } from '../utils/API_URL';
+import Loading from '@/app/components/Loading/Loading';
 
 export default function Perfil() {
 
   const router = useRouter()
-  const { readUser } = useSession()
+  const { readUser, user } = useSession()
 
   const [ name, setName ] = useState('')
   const [ nick, setNick ] = useState('')
@@ -28,6 +30,8 @@ export default function Perfil() {
   const [ searchId, setSearchId ] = useState('')
   const [ competition, setCompetition ] = useState('')
   const [ profilePic, setProfilePic ] = useState('')
+  
+  const [ loading, setLoading ] = useState(false)
 
   const copyId = async() => {
     await Clipboard.setStringAsync(searchId);
@@ -35,12 +39,12 @@ export default function Perfil() {
   }
 
   const handleUserInfos = async() => {
+    setLoading(true)
     const userInfos: any = await readUser()
 
     setName(userInfos.name)
     setNick(userInfos.nickname)
     setEmail(userInfos.email)
-    setProfilePic(userInfos.profilePic)
     setCompetition(userInfos.competition)
     setScore(userInfos.tot_score)
     setSearchId(userInfos.search_id)
@@ -56,11 +60,28 @@ export default function Perfil() {
         email: email,
       },
     });
+    setLoading(false)
+
   }
+
+  const imageUser = async() => {
+      if (user && user.profilePic) {
+          const imageUrl = `${API_URL}/user/photo/${user.id}`;
+          setProfilePic(imageUrl);
+      }
+  };
 
   useEffect(() => {
     handleUserInfos()
   }, [])
+
+  useEffect(() => {
+      imageUser();
+  }, [profilePic]);
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <View className='bg-[#fafafa] flex h-full w-full items-center '>
@@ -76,7 +97,7 @@ export default function Perfil() {
         <Text className='font-cormorantSC text-[20px]'>perfil</Text>
         <Spacer h={24}/>
         <View className='flex-row'>
-          <ProfileButton text='IMAGEM'/>
+          <ProfileButton profilePic={profilePic} text='IMAGEM'/>
         </View>
           <View className='absolute right-[50px] top-[115px]'>
             <SmallButton onPress={() => editUser()} icon={<Feather name="edit" size={24} color="black" />}/>
