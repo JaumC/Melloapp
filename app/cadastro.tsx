@@ -62,7 +62,7 @@ export default function Cadastro() {
         formData.append("file", {
             uri: profilePic,
             type: "image/jpeg",
-            name: `${uuidv4()}.jpg`,
+            name: 'photo.jpg',
             } as any);
     
         await createUser(formData);

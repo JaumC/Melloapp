@@ -38,16 +38,20 @@ export default function Perfil() {
     notifyToast('success', 'Sucesso', 'Código copiado!')
   }
 
-  const handleUserInfos = async() => {
-    setLoading(true)
-    const userInfos: any = await readUser()
-
-    setName(userInfos.name)
-    setNick(userInfos.nickname)
-    setEmail(userInfos.email)
-    setCompetition(userInfos.competition)
-    setScore(userInfos.tot_score)
-    setSearchId(userInfos.search_id)
+  const handleUserInfos = async () => {
+    const userInfos: any = await readUser();
+    setLoading(false);
+    
+    setName(userInfos.name);
+    setNick(userInfos.nickname);
+    setEmail(userInfos.email);
+    setCompetition(userInfos.competition);
+    setScore(userInfos.tot_score);
+    setSearchId(userInfos.search_id);
+  
+    const imageUrl = `${API_URL}/user/photo/${user?.id}?timestamp=${new Date().getTime()}`;
+    console.log(imageUrl);
+    setProfilePic(imageUrl); 
   }
 
   const editUser = () => {
@@ -60,24 +64,13 @@ export default function Perfil() {
         email: email,
       },
     });
-    setLoading(false)
 
   }
 
-  const imageUser = async() => {
-      if (user && user.profilePic) {
-          const imageUrl = `${API_URL}/user/photo/${user.id}`;
-          setProfilePic(imageUrl);
-      }
-  };
-
   useEffect(() => {
-    handleUserInfos()
-  }, [])
+    handleUserInfos();
+  }, []); 
 
-  useEffect(() => {
-      imageUser();
-  }, [profilePic]);
 
   if (loading) {
     return <Loading />;

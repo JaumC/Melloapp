@@ -87,12 +87,14 @@ export default function UserSession({children}: PropsWithChildren) {
     };
 
     const updateUser = async (updateData: any) => {
-      await axios.post(`${API_URL}/user/update/${user?.id}`, updateData, {
+      await axios.patch(`${API_URL}/user/update`, updateData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
         withCredentials: true})
       .then((response) => {
+        setUser(response.data.user)
+        SecureStore.setItemAsync("user_data", JSON.stringify(response.data.user));
         notifyToast('success', 'Sucesso', response.data.message)
         router.push('/home')
       })
@@ -120,8 +122,8 @@ export default function UserSession({children}: PropsWithChildren) {
         await SecureStore.setItemAsync('token', response.data.token)
         await SecureStore.setItemAsync('user_data', JSON.stringify(response.data.user))
       
-        notifyToast("success", "Sucesso", response.data.message)
         setUser(response.data.user)
+        notifyToast("success", "Sucesso", response.data.message)
         router.push('/home')
       }catch(error: string | any) {
         if (error.response) {
@@ -137,8 +139,8 @@ export default function UserSession({children}: PropsWithChildren) {
         await SecureStore.deleteItemAsync('token')
         await SecureStore.deleteItemAsync('user_data')
         setUser(null)
-        router.push('/')
         notifyToast("success", "Sucesso", 'Usuário deslogado com sucesso.')
+        router.push('/')
 
       }catch{
         notifyToast("error", "Erro", 'Erro ao deslogar.')

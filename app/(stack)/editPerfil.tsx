@@ -52,6 +52,7 @@ export default function EditPerfil() {
 
     const updateData = new FormData();
 
+    updateData.append("id", user?.id || "");
     updateData.append("name", newName);
     updateData.append("nickname", newNick);
     updateData.append("email", newEmail);
@@ -60,7 +61,7 @@ export default function EditPerfil() {
       updateData.append("file", {
         uri: newProfilePic,
         type: "image/jpeg",
-        name: `photo.jpg`,
+        name: 'photo.jpg',
       } as any);
     }
 
@@ -71,7 +72,7 @@ export default function EditPerfil() {
 
   const imageUser = async () => {
     if (user && user.profilePic) {
-      const imageUrl = `${API_URL}/user/photo/${user.id}`;
+    const imageUrl = `${API_URL}/user/photo/${user?.id}?timestamp=${new Date().getTime()}`;
       setNewProfilePic(imageUrl);
     }
   };
@@ -80,11 +81,11 @@ export default function EditPerfil() {
     setNewEmail(email || '');
     setNewNick(nick || '');
     setNewName(name || '');
-  }, [nick, name, email, profilePic]);
+  }, [nick, name, email]);
 
   useEffect(() => {
     imageUser();
-  }, [user]);
+  }, []);
 
   if (loading) {
     return <Loading />;

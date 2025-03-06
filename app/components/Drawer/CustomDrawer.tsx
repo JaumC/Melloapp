@@ -30,14 +30,9 @@ export default function CustomDrawer(props: any) {
 
       setNick(userInfos.nickname)
       setEmail(userInfos.email)
+      const imageUrl = `${API_URL}/user/photo/${user?.id}?timestamp=${new Date().getTime()}`;
+      setProfilePic(imageUrl);
     }
-
-    const imageUser = async() => {
-        if (user && user.profilePic) {
-            const imageUrl = `${API_URL}/user/photo/${user.id}`;
-            setProfilePic(imageUrl);
-        }
-    };
 
     useFonts({
       CormorantSC_400Regular,
@@ -46,11 +41,7 @@ export default function CustomDrawer(props: any) {
 
     useEffect(() => {
       handleUserInfos()
-    }, [nick, email])
-
-    useEffect(() => {
-        imageUser();
-    }, [profilePic]);
+    }, [user?.id])
 
   return (
     <DrawerContentScrollView
