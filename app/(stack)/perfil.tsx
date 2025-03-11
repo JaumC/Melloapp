@@ -1,5 +1,5 @@
 import { View, Text, StatusBar, ScrollView, TouchableOpacity } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import * as Clipboard from 'expo-clipboard';
 
 import ProfileButton from '@/app/components/Buttons/ProfileButton'
@@ -10,7 +10,7 @@ import Line from '@/app/components/Line/Line'
 
 import Feather from '@expo/vector-icons/Feather';
 
-import { useRouter } from 'expo-router'
+import { useFocusEffect, useRouter } from 'expo-router'
 import { useSession } from '@/app/contexts/UserProvider'
 
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
@@ -21,56 +21,38 @@ import Loading from '@/app/components/Loading/Loading';
 export default function Perfil() {
 
   const router = useRouter()
-  const { readUser, user } = useSession()
+  const { user, loading } = useSession()
 
   const [ name, setName ] = useState('')
   const [ nick, setNick ] = useState('')
   const [ email, setEmail ] = useState('')
+  const [ profilePic, setProfilePic ] = useState('')
+  
   const [ score, setScore ] = useState('')
   const [ searchId, setSearchId ] = useState('')
   const [ competition, setCompetition ] = useState('')
-  const [ profilePic, setProfilePic ] = useState('')
   
-  const [ loading, setLoading ] = useState(false)
-
   const copyId = async() => {
     await Clipboard.setStringAsync(searchId);
     notifyToast('success', 'Sucesso', 'Código copiado!')
   }
 
-  const handleUserInfos = async () => {
-    const userInfos: any = await readUser();
-    setLoading(false);
-    
-    setName(userInfos.name);
-    setNick(userInfos.nickname);
-    setEmail(userInfos.email);
-    setCompetition(userInfos.competition);
-    setScore(userInfos.tot_score);
-    setSearchId(userInfos.search_id);
-  
-    const imageUrl = `${API_URL}/user/photo/${user?.id}?timestamp=${new Date().getTime()}`;
-    console.log(imageUrl);
-    setProfilePic(imageUrl); 
-  }
+  useFocusEffect(
+    useCallback(() => {
+      setName(user?.name || '');
+      setNick(user?.nickname || '');
+      setEmail(user?.email || '');
+      setCompetition(user?.competition || '');
+      setScore(user?.tot_score || '');
+      setSearchId(user?.search_id || '');
 
-  const editUser = () => {
-    router.push({
-      pathname: '/editPerfil',
-      params: {
-        name: name,
-        nick: nick,
-        profilePic: profilePic,
-        email: email,
-      },
-    });
-
-  }
-
-  useEffect(() => {
-    handleUserInfos();
-  }, []); 
-
+      if (user?.profilePic) {
+        setProfilePic(
+          `${API_URL}/user/photo/${user?.id}?timestamp=${new Date().getTime()}`
+        );
+      }
+    }, [])
+  );
 
   if (loading) {
     return <Loading />;
@@ -93,7 +75,7 @@ export default function Perfil() {
           <ProfileButton profilePic={profilePic} text='IMAGEM'/>
         </View>
           <View className='absolute right-[50px] top-[115px]'>
-            <SmallButton onPress={() => editUser()} icon={<Feather name="edit" size={24} color="black" />}/>
+            <SmallButton onPress={() => router.push('/(stack)/editPerfil')} icon={<Feather name="edit" size={24} color="black" />}/>
           </View>
         <Spacer h={60}/>
         <Line/>

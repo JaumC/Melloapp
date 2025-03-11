@@ -2,6 +2,10 @@ export interface User {
     id?: string;
     name?: string;
     email?: string;
+    tot_score?: string;
+    competition?: string;
+    nickname?: string;
+    search_id?: string;
     profilePic?: string;
     password?: string;
 }

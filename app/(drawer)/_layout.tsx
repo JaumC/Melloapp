@@ -4,9 +4,9 @@ import * as React from 'react';
 import CustomDrawer from "@/app/components/Drawer/CustomDrawer";
 import ProfileButton from '@/app/components/Buttons/ProfileButton';
 import Spacer from '@/app/components/Spacer/Spacer';
-import { useRouter } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
 import { useSession } from '@/app/contexts/UserProvider';
-import { useState, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { API_URL } from '../utils/API_URL';
 
 export default function Layout() {
@@ -16,15 +16,15 @@ export default function Layout() {
 
     const [profilePic, setProfilePic] = useState<string>("");
 
-    const imageUser = async() => {
-        const imageUrl = `${API_URL}/user/photo/${user?.id}?timestamp=${new Date().getTime()}`;
-        setProfilePic(imageUrl);
-    };
-    
-    useEffect(() => {
-        imageUser();
-        console.log(user)
+  useFocusEffect(
+    useCallback(() => {
+      if (user?.profilePic) {
+        setProfilePic(
+          `${API_URL}/user/photo/${user?.id}?timestamp=${new Date().getTime()}`
+        );
+      }
     }, [])
+  );
 
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>

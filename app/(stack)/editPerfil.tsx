@@ -1,5 +1,5 @@
 import { View, Text, StatusBar, ScrollView } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import ProfileButton from '@/app/components/Buttons/ProfileButton';
 import ActionButton from '@/app/components/Buttons/ActionButton';
@@ -7,7 +7,7 @@ import Input from '@/app/components/Input/Input';
 import Spacer from '@/app/components/Spacer/Spacer';
 import Line from '@/app/components/Line/Line';
 
-import { useRouter, useGlobalSearchParams } from 'expo-router';
+import { useRouter, useFocusEffect } from 'expo-router';
 import { useSession } from '@/app/contexts/UserProvider';
 
 import * as ImagePicker from "expo-image-picker";
@@ -17,16 +17,14 @@ import Loading from '@/app/components/Loading/Loading';
 
 export default function EditPerfil() {
   const router = useRouter();
-  const { name, nick, email, profilePic }: any = useGlobalSearchParams();
 
-  const [loading, setLoading] = useState(false);
+  const { updateUser, user, loading } = useSession();
 
-  const [newNick, setNewNick] = useState(nick || '');
-  const [newName, setNewName] = useState(name || '');
-  const [newEmail, setNewEmail] = useState(email || '');
-  const [newProfilePic, setNewProfilePic] = useState(profilePic || '');
+  const [newNick, setNewNick] = useState(user?.nickname || '');
+  const [newName, setNewName] = useState(user?.name || '');
+  const [newEmail, setNewEmail] = useState(user?.email || '');
+  const [newProfilePic, setNewProfilePic] = useState(user?.profilePic || '');
 
-  const { updateUser, user } = useSession();
 
   const pickImage = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -48,7 +46,11 @@ export default function EditPerfil() {
   };
 
   const handleEditUser = async () => {
-    setLoading(true);
+
+    if(user?.name === newName && user?.email === newEmail && user?.nickname === newNick && user?.profilePic === newProfilePic){
+      notifyToast('info', 'info', 'Não houve alterações.')
+      return
+    }
 
     const updateData = new FormData();
 
@@ -67,25 +69,17 @@ export default function EditPerfil() {
 
     await updateUser(updateData);
 
-    setLoading(false);
   };
 
-  const imageUser = async () => {
-    if (user && user.profilePic) {
-    const imageUrl = `${API_URL}/user/photo/${user?.id}?timestamp=${new Date().getTime()}`;
-      setNewProfilePic(imageUrl);
-    }
-  };
-
-  useEffect(() => {
-    setNewEmail(email || '');
-    setNewNick(nick || '');
-    setNewName(name || '');
-  }, [nick, name, email]);
-
-  useEffect(() => {
-    imageUser();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      if (user?.profilePic) {
+        setNewProfilePic(
+          `${API_URL}/user/photo/${user?.id}?timestamp=${new Date().getTime()}`
+        );
+      }
+    }, [])
+  );
 
   if (loading) {
     return <Loading />;

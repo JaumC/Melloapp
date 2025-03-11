@@ -1,6 +1,6 @@
 import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
 import { View, Text } from "react-native";
-import { useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import { useSession } from "@/app/contexts/UserProvider";
 import SmallButton from "@/app/components/Buttons/SmallButton";
 import ProfileButton from "@/app/components/Buttons/ProfileButton";
@@ -13,35 +13,40 @@ import Feather from '@expo/vector-icons/Feather';
 import { useFonts } from 'expo-font';
 import { CormorantSC_400Regular } from '@expo-google-fonts/cormorant-sc'; 
 import { Roboto_100Thin } from '@expo-google-fonts/roboto'; 
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { API_URL } from "@/app/utils/API_URL";
+import Loading from "@/app/components/Loading/Loading";
 
 export default function CustomDrawer(props: any) {
 
     const router = useRouter()
-    const { logoutUser, readUser, user } = useSession()
+    const { logoutUser, user, loading } = useSession()
 
-    const [ nick, setNick ] = useState('')
-    const [ profilePic, setProfilePic ] = useState('')
-    const [ email, setEmail ] = useState('')
-
-    const handleUserInfos = async() => {
-      const userInfos: any = await readUser()
-
-      setNick(userInfos.nickname)
-      setEmail(userInfos.email)
-      const imageUrl = `${API_URL}/user/photo/${user?.id}?timestamp=${new Date().getTime()}`;
-      setProfilePic(imageUrl);
-    }
+    const [ nick, setNick ] = useState<string>('')
+    const [ email, setEmail ] = useState<string>('')
+    const [ profilePic, setProfilePic ] = useState<string>('')
 
     useFonts({
       CormorantSC_400Regular,
       Roboto_100Thin,
     });
 
-    useEffect(() => {
-      handleUserInfos()
-    }, [user?.id])
+  useFocusEffect(
+    useCallback(() => {
+      setNick(user?.nickname || '');
+      setEmail(user?.email || '');
+
+      if (user?.profilePic) {
+        setProfilePic(
+          `${API_URL}/user/photo/${user?.id}?timestamp=${new Date().getTime()}`
+        );
+      }
+    }, [])
+  );
+
+    if (loading) {
+      return <Loading />;
+    }
 
   return (
     <DrawerContentScrollView

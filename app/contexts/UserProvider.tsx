@@ -7,21 +7,19 @@ import { useRouter } from "expo-router";
 import axios from "axios";
 interface UserProviderType {
   user: User | null;
+  loading: boolean;
   loginUser: (email: string, password: string) => void;
   createUser: (data: FormData) => void;
-  readUser: () => void;
   updateUser: (data: FormData) => void;
-  deleteUser: (id: string) => void;
   logoutUser: () => void;
 }
 
 export const UserContext = createContext<UserProviderType>({
   user: null,
+  loading: false,
   loginUser: () => {},
   createUser: () => {},
-  readUser: () => {},
   updateUser: () => {},
-  deleteUser: () => {},
   logoutUser: () => {},
 });
 
@@ -36,6 +34,7 @@ export default function UserSession({children}: PropsWithChildren) {
     const router = useRouter();
 
     const [user, setUser] = useState<User | null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
 
     const createUser = async (formData: any) => {
       const name = formData.get("name");
@@ -53,6 +52,7 @@ export default function UserSession({children}: PropsWithChildren) {
         return;
       }
     
+      setLoading(true)
       await axios.post(`${API_URL}/user/create`, formData, {
         headers: {
         "Content-Type": "multipart/form-data",
@@ -68,48 +68,36 @@ export default function UserSession({children}: PropsWithChildren) {
         } else {
           notifyToast("error", "Erro", 'Erro ao se conectar com o servidor.');
         }
-      });
+      })
+      .finally(() => {
+        setLoading(false)
+      })
     };
 
-    const readUser = async () => {
-      try{
-        const response = await axios.get(`${API_URL}/user/read/${user?.id}`)
-        return response.data
-
-      }catch(error: any){
-        if (error.response) {
-          notifyToast("error", "Erro", error.response.data.message)
-        } else {
-          notifyToast("error", "Erro", 'Erro ao obter dados do usuário.')
-        }
-
-      }
-    };
-
-    const updateUser = async (updateData: any) => {
-      await axios.patch(`${API_URL}/user/update`, updateData, {
+    const updateUser = async (updateData: FormData) => {
+      setLoading(true)
+      await axios.patch(`${API_URL}/user/update/${user?.id}`, updateData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
         withCredentials: true})
-      .then((response) => {
-        setUser(response.data.user)
-        SecureStore.setItemAsync("user_data", JSON.stringify(response.data.user));
-        notifyToast('success', 'Sucesso', response.data.message)
-        router.push('/home')
-      })
-      .catch((error) => {
-        if(error.response){
-          notifyToast('error', 'Erro', error.response.data.message)
-        }else{
-          notifyToast('error', 'Error', 'Não foi possível atualizar os dados.')
-        }
-      })
+        .then((response) => {
+          setUser(response.data.user)
+          SecureStore.setItemAsync("user_data", JSON.stringify(response.data.user));
+          notifyToast('success', 'Sucesso', response.data.message)
+          router.replace('/home')
+        })
+        .catch((error) => {
+          if(error.response){
+            notifyToast('error', 'Erro', error.response.data.message)
+          }else{
+            notifyToast('error', 'Error', 'Não foi possível atualizar os dados.')
+          }
+        })
+        .finally(() => {
+          setLoading(false)
+        })
     };
-
-    const deleteUser = async () => {
-
-    }
 
     const loginUser = async (email: string, password: string) => {
       if (!email || !password) {
@@ -118,10 +106,11 @@ export default function UserSession({children}: PropsWithChildren) {
       }
 
       try{
+        setLoading(true)
         const response = await axios.post(`${API_URL}/user/login`, {email, password}, {withCredentials: true})
         await SecureStore.setItemAsync('token', response.data.token)
         await SecureStore.setItemAsync('user_data', JSON.stringify(response.data.user))
-      
+        
         setUser(response.data.user)
         notifyToast("success", "Sucesso", response.data.message)
         router.push('/home')
@@ -131,6 +120,8 @@ export default function UserSession({children}: PropsWithChildren) {
         } else {
           notifyToast("error", "Erro", 'Erro ao se conectar com o servidor.')
         }
+      }finally{
+        setLoading(false)
       }
     };
     
@@ -163,10 +154,9 @@ export default function UserSession({children}: PropsWithChildren) {
         <UserContext.Provider 
           value={{ 
             user, 
+            loading, 
             createUser, 
-            readUser, 
             updateUser, 
-            deleteUser, 
             loginUser, 
             logoutUser,
           }}>
