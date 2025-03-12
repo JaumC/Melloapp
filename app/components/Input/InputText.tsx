@@ -13,7 +13,7 @@ interface InputTextProps {
   h?: number
 }
 
-const InputText = ({w=274, h=40, text, header, pass=false, upper=true, value, onChangeText}: InputTextProps) => {
+const InputText = ({w=274, h=40, text, header}: InputTextProps) => {
 
   return (
     <View style={{width: w, height: h}} >
