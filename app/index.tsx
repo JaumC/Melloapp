@@ -1,8 +1,4 @@
-import { useSession } from "@/app/contexts/UserProvider";
-
-import { CormorantSC_400Regular } from '@expo-google-fonts/cormorant-sc'; 
-import { Roboto_100Thin } from '@expo-google-fonts/roboto'; 
-import { useFonts } from 'expo-font';
+import { userHook } from "@/app/contexts/UserProvider";
 
 import { View, Text, TouchableOpacity, StatusBar } from 'react-native';
 import React, { useState } from 'react';
@@ -13,25 +9,16 @@ import Spacer from '@/app/components/Spacer/Spacer';
 import Loading from '@/app/components/Loading/Loading';
 import Button from '@/app/components/Buttons/ActionButton';
 
-
 export default function Login() {
-  const { loginUser } = useSession();
+  const { loginUser, loading } = userHook();
 
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
-  const [loading, setLoading] = useState(false);
   
   const router = useRouter();
 
-  useFonts({
-    CormorantSC_400Regular,
-    Roboto_100Thin,
-  });
-
   const handleLogin = async() => {
-    setLoading(true)
     await loginUser(email, senha)
-    setLoading(false)
   }
 
   if (loading){

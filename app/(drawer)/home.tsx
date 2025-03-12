@@ -6,10 +6,11 @@ import { useRouter } from "expo-router";
 import AddButton from '@/app/components/Buttons/AddButton';
 import Loading from '@/app/components/Loading/Loading';
 import Spacer from '@/app/components/Spacer/Spacer';
+import { userHook } from '@/app/contexts/UserProvider';
 
 export default function Home() {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  const { loading } = userHook();
   const [dare, setDare] = useState(false);
 
   if (loading){

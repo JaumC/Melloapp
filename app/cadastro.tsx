@@ -1,4 +1,4 @@
-import { useSession } from '@/app/contexts/UserProvider';
+import { userHook } from '@/app/contexts/UserProvider';
 
 import { View, Text, ScrollView, StatusBar, TouchableOpacity } from 'react-native'
 
@@ -15,12 +15,8 @@ import React, { useState } from 'react'
 import { notifyToast } from './utils/Toast';
 import ProfileButton from './components/Buttons/ProfileButton';
 
-import { v4 as uuidv4 } from 'uuid';
-
 export default function Cadastro() {
-    const { createUser } = useSession();
-
-    const [loading, setLoading] = useState(false);
+    const { createUser, loading } = userHook();
 
     const [name, setName] = useState('');
     const [nick, setNick] = useState('');
@@ -50,8 +46,6 @@ export default function Cadastro() {
     }
 
     const handleRegister = async () => {
-        setLoading(true);
-
         const formData = new FormData();
 
         formData.append("name", name);
@@ -66,8 +60,6 @@ export default function Cadastro() {
             } as any);
     
         await createUser(formData);
-    
-        setLoading(false);
     };
 
     if (loading){

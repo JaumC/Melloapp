@@ -8,7 +8,7 @@ import Spacer from '@/app/components/Spacer/Spacer';
 import Line from '@/app/components/Line/Line';
 
 import { useRouter, useFocusEffect } from 'expo-router';
-import { useSession } from '@/app/contexts/UserProvider';
+import { userHook } from '@/app/contexts/UserProvider';
 
 import * as ImagePicker from "expo-image-picker";
 import { API_URL } from '../utils/API_URL';
@@ -18,7 +18,7 @@ import Loading from '@/app/components/Loading/Loading';
 export default function EditPerfil() {
   const router = useRouter();
 
-  const { updateUser, user, loading } = useSession();
+  const { updateUser, user, loading } = userHook();
 
   const [newNick, setNewNick] = useState(user?.nickname || '');
   const [newName, setNewName] = useState(user?.name || '');

@@ -23,7 +23,7 @@ export const UserContext = createContext<UserProviderType>({
   logoutUser: () => {},
 });
 
-export const useSession = () => {
+export const userHook = () => {
   const val = useContext(UserContext)
   return val
 }

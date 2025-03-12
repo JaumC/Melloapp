@@ -1,4 +1,4 @@
-import { createContext, useState, PropsWithChildren } from 'react';
+import { createContext, useState, PropsWithChildren, useContext } from 'react';
 import { Dare } from '@/typos';
 
 interface DareProviderType {
@@ -16,6 +16,11 @@ export const DareContext = createContext<DareProviderType>({
     updateDare: () => {},
     deleteDare: () => {},
 });
+
+export const dareHook = () => {
+  const val = useContext(DareContext)
+  return val
+}
 
 export default function DareSession({children}: PropsWithChildren) {
     console.log('Sessão de Desafio');

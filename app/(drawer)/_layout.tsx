@@ -5,14 +5,14 @@ import CustomDrawer from "@/app/components/Drawer/CustomDrawer";
 import ProfileButton from '@/app/components/Buttons/ProfileButton';
 import Spacer from '@/app/components/Spacer/Spacer';
 import { useFocusEffect, useRouter } from 'expo-router';
-import { useSession } from '@/app/contexts/UserProvider';
+import { userHook } from '@/app/contexts/UserProvider';
 import { useState, useCallback } from 'react';
 import { API_URL } from '../utils/API_URL';
 
 export default function Layout() {
 
     const router = useRouter()
-    const { user } = useSession()
+    const { user } = userHook()
 
     const [profilePic, setProfilePic] = useState<string>("");
 

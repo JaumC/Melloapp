@@ -11,7 +11,7 @@ import Line from '@/app/components/Line/Line'
 import Feather from '@expo/vector-icons/Feather';
 
 import { useFocusEffect, useRouter } from 'expo-router'
-import { useSession } from '@/app/contexts/UserProvider'
+import { userHook } from '@/app/contexts/UserProvider'
 
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { notifyToast } from '@/app/utils/Toast'
@@ -21,7 +21,7 @@ import Loading from '@/app/components/Loading/Loading';
 export default function Perfil() {
 
   const router = useRouter()
-  const { user, loading } = useSession()
+  const { user, loading } = userHook()
 
   const [ name, setName ] = useState('')
   const [ nick, setNick ] = useState('')
