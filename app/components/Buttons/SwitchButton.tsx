@@ -1,47 +1,35 @@
 import React, { useState } from 'react';
-import { View, Text, Switch, StyleSheet, Animated, TouchableOpacity } from 'react-native';
+import { View, Text, Animated, TouchableOpacity } from 'react-native';
+import Spacer from '@/app/components/Spacer/Spacer';
 
 const SwitchButton = () => {
-    const [isEnabled, setIsEnabled] = useState(false);
-    const thumbPosition = new Animated.Value(0); // Controla a posição do "thumb"
+    const [isEnabled, setIsEnabled] = useState(true);
     
-    const toggleSwitch = () => {
-      setIsEnabled(previousState => !previousState);
-      Animated.timing(thumbPosition, {
-        toValue: isEnabled ? 0 : 30, // Desloca a bolotinha
-        duration: 300,
-        useNativeDriver: true,
-      }).start();
-    };
+    function toggleSwitch() {
+      setIsEnabled(isEnabled => !isEnabled)
+    }
   
     return (
-      <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-        <Text>{isEnabled ? 'Ligado' : 'Desligado'}</Text>
-        
-        <TouchableOpacity
-          style={{
-            width: 60,
-            height: 30,
-            borderRadius: 20,
-            backgroundColor: isEnabled ? '#499741' : '#C4A59D',
-            justifyContent: 'center',
-            padding: 5,
-          }}
-          onPress={toggleSwitch}
-        >
-          <Animated.View
-            style={{
-              width: 20,
-              height: 20,
-              borderRadius: 10,
-              backgroundColor: '#FFF9F9',
-              transform: [{ translateX: thumbPosition }],
-            }}
-          />
-        </TouchableOpacity>
-        <Text className='font-robotoThin text-[13px] font-[700] color-[#816B66]'>FINAL DE SEMANA</Text>
-      </View>
+        <View className="flex justify-center items-center flex-row">
+            <TouchableOpacity activeOpacity={1} onPress={toggleSwitch} className='flex-row w-[60px] h-[30px] rounded-[15px] items-center'
+                style={{
+                    backgroundColor: isEnabled ? '#499741' : '#C4A59D',
+                    justifyContent: isEnabled ? 'flex-end' : 'flex-start',
+                    paddingHorizontal: 5,
+                }}>
+                  <View className='w-[23px] h-[23px] bg-[#FFFFFF] rounded-[15px]' 
+                    style={{
+                      shadowOffset: {width: 0, height: 0},
+                      shadowOpacity: 0.15,
+                      shadowRadius: 2,
+                      elevation: 8,
+                      }}/>
+               
+            </TouchableOpacity>
+            <Spacer w={10}/>
+            <Text className="text-[13px] color-[#000] font-robotoThin">FINAL DE SEMANA</Text>
+        </View>
     );
-  };
+};
 
 export default SwitchButton;
