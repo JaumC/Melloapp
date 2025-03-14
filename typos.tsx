@@ -8,23 +8,19 @@ export interface User {
     search_id?: string;
     profilePic?: string;
     password?: string;
-}
-
-export interface UserRegister {
-    nick: string;
-    name: string;
-    email: string;
-    password: string;
-    profilePic?: {
-      uri: string | undefined;
-      type: string;
-      name: string;
-    };
-    confirmPassword: string;
+    dareId?: string;
 }
 
 export interface Dare {
-    dare: { 
-      id?: string,
-    }
+    id?: string,
+    name?: string;
+    startDate?: string;
+    endDate?: string;
+    days?: string;
+    weekend?: boolean;
+    friends?: string;
+    sequencyDay?: string;
+    sequencyMounth?: string;
+    streak?: string;
+    finishedDare?: boolean;
   }
