@@ -1,11 +1,15 @@
 import GlobalContext from "@/app/contexts/GlobalContext";
-import { Stack } from "expo-router";
 import Toast from 'react-native-toast-message';
+import { Stack } from "expo-router";
 import '../global.css';
 
+import { userHook } from "./contexts/UserProvider";
 import { SafeAreaView, View } from "react-native";
+import Loading from "@/app/utils/Loading";
 
 export default function Layout() {
+
+  const { loading } = userHook()
 
   return (
     <GlobalContext>
@@ -26,7 +30,8 @@ export default function Layout() {
             <Stack.Screen name="(stack)" options={{ headerShown: false, headerTitle: '' }} />
             <Stack.Screen name="recuperarSenha" />
           </Stack>
-          <Toast />
+          <Toast/>
+          {loading && <Loading />}
         </View>
       </SafeAreaView>
     </GlobalContext>

@@ -4,7 +4,6 @@ import { View, Text, ScrollView, StatusBar, TouchableOpacity } from 'react-nativ
 
 import ActionButton from '@/app/components/Buttons/ActionButton'
 import AddButton from '@/app/components/Buttons/AddButton'
-import Loading from '@/app/components/Loading/Loading';
 import Spacer from '@/app/components/Spacer/Spacer'
 import Input from '@/app/components/Input/Input'
 import Line from '@/app/components/Line/Line'
@@ -16,7 +15,7 @@ import { notifyToast } from './utils/Toast';
 import ProfileButton from './components/Buttons/ProfileButton';
 
 export default function Cadastro() {
-    const { createUser, loading } = userHook();
+    const { createUser } = userHook();
 
     const [name, setName] = useState('');
     const [nick, setNick] = useState('');
@@ -61,10 +60,6 @@ export default function Cadastro() {
     
         await createUser(formData);
     };
-
-    if (loading){
-        return <Loading/>
-    }
 
     return (
         <View className='bg-[#fafafa] h-full w-full'>

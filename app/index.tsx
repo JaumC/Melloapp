@@ -6,11 +6,10 @@ import { useRouter } from 'expo-router';
 
 import Input from '@/app/components/Input/Input';
 import Spacer from '@/app/components/Spacer/Spacer';
-import Loading from '@/app/components/Loading/Loading';
 import Button from '@/app/components/Buttons/ActionButton';
 
 export default function Login() {
-  const { loginUser, loading } = userHook();
+  const { loginUser } = userHook();
 
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
@@ -19,10 +18,6 @@ export default function Login() {
 
   const handleLogin = async() => {
     await loginUser(email, senha)
-  }
-
-  if (loading){
-    return <Loading/>
   }
 
   return (

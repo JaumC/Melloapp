@@ -12,12 +12,11 @@ import Feather from '@expo/vector-icons/Feather';
 
 import { useCallback, useState } from "react";
 import { API_URL } from "@/app/utils/API_URL";
-import Loading from "@/app/components/Loading/Loading";
 
 export default function CustomDrawer(props: any) {
 
     const router = useRouter()
-    const { logoutUser, user, loading } = userHook()
+    const { logoutUser, user } = userHook()
 
     const [ nick, setNick ] = useState<string>('')
     const [ email, setEmail ] = useState<string>('')
@@ -35,10 +34,6 @@ export default function CustomDrawer(props: any) {
       }
     }, [])
   );
-
-    if (loading) {
-      return <Loading />;
-    }
 
   return (
     <DrawerContentScrollView

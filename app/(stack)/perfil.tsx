@@ -16,12 +16,11 @@ import { userHook } from '@/app/contexts/UserProvider'
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { notifyToast } from '@/app/utils/Toast'
 import { API_URL } from '../utils/API_URL';
-import Loading from '@/app/components/Loading/Loading';
 
 export default function Perfil() {
 
   const router = useRouter()
-  const { user, loading } = userHook()
+  const { user } = userHook()
 
   const [ name, setName ] = useState('')
   const [ nick, setNick ] = useState('')
@@ -53,10 +52,6 @@ export default function Perfil() {
       }
     }, [])
   );
-
-  if (loading) {
-    return <Loading />;
-  }
 
   return (
     <View className='bg-[#fafafa] flex h-full w-full items-center '>

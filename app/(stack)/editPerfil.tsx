@@ -1,5 +1,5 @@
 import { View, Text, StatusBar, ScrollView } from 'react-native';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import ProfileButton from '@/app/components/Buttons/ProfileButton';
 import ActionButton from '@/app/components/Buttons/ActionButton';
@@ -13,22 +13,19 @@ import { userHook } from '@/app/contexts/UserProvider';
 import * as ImagePicker from "expo-image-picker";
 import { API_URL } from '../utils/API_URL';
 import { notifyToast } from '@/app/utils/Toast';
-import Loading from '@/app/components/Loading/Loading';
 
 export default function EditPerfil() {
   const router = useRouter();
-
-  const { updateUser, user, loading } = userHook();
+  const { updateUser, user } = userHook();
 
   const [newNick, setNewNick] = useState(user?.nickname || '');
   const [newName, setNewName] = useState(user?.name || '');
   const [newEmail, setNewEmail] = useState(user?.email || '');
   const [newProfilePic, setNewProfilePic] = useState(user?.profilePic || '');
 
-
   const pickImage = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (permissionResult.granted === false) {
+    if (!permissionResult.granted) {
       notifyToast("error", "Erro", "É necessário permissão para acessar a galeria.");
       return;
     }
@@ -46,14 +43,17 @@ export default function EditPerfil() {
   };
 
   const handleEditUser = async () => {
-
-    if(user?.name === newName && user?.email === newEmail && user?.nickname === newNick && user?.profilePic === newProfilePic){
-      notifyToast('info', 'info', 'Não houve alterações.')
-      return
+    if (
+      user?.name === newName &&
+      user?.email === newEmail &&
+      user?.nickname === newNick &&
+      user?.profilePic === newProfilePic
+    ) {
+      notifyToast('info', 'Info', 'Não houve alterações.');
+      return;
     }
 
     const updateData = new FormData();
-
     updateData.append("id", user?.id || "");
     updateData.append("name", newName);
     updateData.append("nickname", newNick);
@@ -68,7 +68,6 @@ export default function EditPerfil() {
     }
 
     await updateUser(updateData);
-
   };
 
   useFocusEffect(
@@ -81,10 +80,6 @@ export default function EditPerfil() {
     }, [])
   );
 
-  if (loading) {
-    return <Loading />;
-  }
-
   return (
     <View className='bg-[#fafafa] flex h-full w-full items-center'>
       <StatusBar barStyle="dark-content" backgroundColor="#fafafa" />
@@ -95,7 +90,7 @@ export default function EditPerfil() {
           <Text className='font-cormorantSC text-[20px]'>perfil</Text>
           <Spacer h={24} />
           <View className='flex-row'>
-            <ProfileButton profilePic={newProfilePic} onPress={() => pickImage()} text='IMAGEM' />
+            <ProfileButton profilePic={newProfilePic} onPress={pickImage} text='IMAGEM' />
           </View>
           <Spacer h={60} />
           <Line />
@@ -109,9 +104,10 @@ export default function EditPerfil() {
           <Spacer h={114} />
           <ActionButton text='RESETAR' color='#6E7687' onPress={() => router.back()} />
           <Spacer h={21} />
-          <ActionButton text='SALVAR' onPress={() => handleEditUser()} />
+          <ActionButton text='SALVAR' onPress={handleEditUser} />
         </View>
       </ScrollView>
+
     </View>
   );
 }
