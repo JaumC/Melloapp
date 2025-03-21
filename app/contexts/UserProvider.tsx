@@ -112,6 +112,7 @@ export default function UserSession({children}: PropsWithChildren) {
           });
         setLoading(false)
         return response.data.users
+        
       } catch (error: any) {
         if (error.response) {
           notifyToast("error", "Erro", error.response.data.message);
