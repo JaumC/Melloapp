@@ -11,14 +11,17 @@ import { API_URL } from '@/app/utils/API_URL';
 import ProfileButton from '@/app/components/Buttons/ProfileButton';
 import SmallButton from '@/app/components/Buttons/SmallButton';
 
+import Feather from '@expo/vector-icons/Feather';
 
 export default function AdcionarCompetidor() {
   const router = useRouter();
   const [search, setSearch] = useState('');
+  const [pressed, setPressed] = useState(new Set());
 
   const [ users, setUsers ] = useState([])
 
-  const { readAllUsers } = userHook();
+  const { readAllUsers, addFriend, removeFriend } = userHook();
+
   const searchUsers = async () => {
     if (search.trim() !== '') { 
       const response: any = await readAllUsers(search);
@@ -28,10 +31,29 @@ export default function AdcionarCompetidor() {
     }
   };
 
+  const handleAddFriend = async(userId: string) => {
+      setPressed((prev) => {
+        const newSet = new Set(prev);
+
+        if (newSet.has(userId)) {
+          newSet.delete(userId);
+        } else {
+          newSet.add(userId);
+        }
+        return newSet;
+      });
+
+      if (pressed.has(userId)) {
+        await removeFriend(userId);
+      } else {
+        await addFriend(userId);
+      }
+  }
+
   useEffect(() => {
     const timeout = setTimeout(() => {
       searchUsers();
-    }, 500); 
+    }, 300); 
 
     return () => clearTimeout(timeout);
   }, [search]);
@@ -59,18 +81,20 @@ export default function AdcionarCompetidor() {
                       <Text className='font-cormorantSC text-[16px]'>{user.nickname.toUpperCase()}</Text>
                       <View className='flex-row'>
                         <Text className='color-[#7C7F81] font-bold'>ID: </Text> 
-                        <Text className='font-robotoThin text-[13px] font-[100] color-[#816B66]'>{user.search_id}</Text>
+                        <Text className='font-robotoThin text-[13px] font-[100] color-[#816B66]'>
+                          {user.search_id}
+                        </Text>
                       </View>
                     </View>
                   </View>
                   
-                  <SmallButton/>
+                  <SmallButton pressed={pressed.has(user._id)} onPress={() => handleAddFriend(user?._id)} icon={<Feather name={pressed.has(user._id) ? 'user-plus' : 'user-check'} size={16} color={pressed.has(user._id) ? 'black' : '#0058CB'} />}/>
                 </View>
                 
                 <Spacer h={50}/>
               </View>
             )  
-          })};
+          })}
             </ScrollView>
         )}
     </View>

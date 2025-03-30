@@ -9,14 +9,14 @@ interface SmallButtonProps {
   pressed?: boolean
 }
 
-const SmallButton = ({ icon, onPress, w = 40, h = 40, pressed = false }: SmallButtonProps) => {
+const SmallButton = ({ icon, onPress, w = 40, h = 40, pressed = true }: SmallButtonProps) => {
   return (
     <TouchableOpacity
       style={[
         {
           width: w,
           height: h,
-          backgroundColor: 'white', 
+          backgroundColor: pressed ? '#D9D9D9' : '#ADB4FF', 
           borderRadius: 11,
           justifyContent: 'center', 
           alignItems: 'center', 
@@ -25,7 +25,7 @@ const SmallButton = ({ icon, onPress, w = 40, h = 40, pressed = false }: SmallBu
           shadowOpacity: 0.25, 
           shadowRadius: 3.5, 
           elevation: 3,
-          borderWidth: 1,
+          borderWidth: pressed ? 1 : 0,
         },
       ]}
       onPress={onPress}>

@@ -9,6 +9,8 @@ interface UserProviderType {
   user: User | null;
   loading: boolean;
   loginUser: (email: string, password: string) => void;
+  addFriend: (userId: string) => void;
+  removeFriend: (userId: string) => void;
   createUser: (data: FormData) => void;
   updateUser: (data: FormData) => void;
   readAllUsers: (searchData: string) => void;
@@ -19,6 +21,8 @@ export const UserContext = createContext<UserProviderType>({
   user: null,
   loading: false,
   loginUser: () => {},
+  addFriend: () => {},
+  removeFriend: () => {},
   createUser: () => {},
   updateUser: () => {},
   logoutUser: () => {},
@@ -162,6 +166,50 @@ export default function UserSession({children}: PropsWithChildren) {
         notifyToast("error", "Erro", "Erro ao deslogar.");
       }
     };
+
+    const addFriend = async (friendId: string) => {
+      setLoading(true)
+      try {
+        const response = await axios.patch(`${API_URL}/user/follow/${user?.id}`, friendId, {
+          withCredentials: true,
+        });
+    
+        setUser(response.data.user);
+        SecureStore.setItemAsync("user_data", JSON.stringify(response.data.user));
+        notifyToast("success", "Sucesso", response.data.message);
+    
+        setLoading(false)
+
+      } catch (error: any) {
+        if (error.response) {
+          notifyToast("error", "Erro", error.response.data.message);
+        } else {
+          notifyToast("error", "Erro", "Não foi possível adcionar amigo.");
+        }
+      } 
+    };
+
+    const removeFriend = async (friendId: string) => {
+      setLoading(true)
+      try {
+        const response = await axios.patch(`${API_URL}/user/unfollow/${user?.id}`, friendId, {
+          withCredentials: true,
+        });
+    
+        setUser(response.data.user);
+        SecureStore.setItemAsync("user_data", JSON.stringify(response.data.user));
+        notifyToast("success", "Sucesso", response.data.message);
+    
+        setLoading(false)
+
+      } catch (error: any) {
+        if (error.response) {
+          notifyToast("error", "Erro", error.response.data.message);
+        } else {
+          notifyToast("error", "Erro", "Não foi possível remover amigo.");
+        }
+      } 
+    };
     
 
     useEffect(() => {
@@ -181,6 +229,8 @@ export default function UserSession({children}: PropsWithChildren) {
           value={{ 
             user, 
             loading, 
+            addFriend,
+            removeFriend,
             readAllUsers,
             createUser, 
             updateUser, 

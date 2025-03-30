@@ -91,10 +91,10 @@ export default function CustomDrawer(props: any) {
 
               <View className="bg-[#D9D9D9] flex flex-row justify-between h-[60px] items-center ">
                   <View className="ml-[20px]">
-                      <SmallButton press={false} onPress={() => router.push('/home')} icon={<FontAwesome6 name="house-chimney" size={20} color="black" />}/>
+                      <SmallButton onPress={() => router.push('/home')} icon={<FontAwesome6 name="house-chimney" size={20} color="black" />}/>
                   </View>
                   <View className="mr-[20px]">
-                      <SmallButton press={true} onPress={logoutUser} icon={<FontAwesome5 name="sign-out-alt" size={20} color="black" />}/>
+                      <SmallButton onPress={logoutUser} icon={<FontAwesome5 name="sign-out-alt" size={20} color="black" />}/>
                   </View>
               </View>
         </View>
