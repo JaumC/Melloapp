@@ -55,7 +55,7 @@ export default function UserSession({children}: PropsWithChildren) {
       }
     
       setLoading(true);
-    
+
       try {
         const response = await axios.post(`${API_URL}/user/create`, formData, {
           headers: { "Content-Type": "multipart/form-data" },

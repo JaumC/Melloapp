@@ -6,10 +6,10 @@ interface SmallButtonProps {
   onPress?: () => void
   w?: number
   h?: number
-  press?: boolean
+  pressed?: boolean
 }
 
-const SmallButton = ({ icon, onPress, w = 40, h = 40, press = false }: SmallButtonProps) => {
+const SmallButton = ({ icon, onPress, w = 40, h = 40, pressed = false }: SmallButtonProps) => {
   return (
     <TouchableOpacity
       style={[
