@@ -5,7 +5,7 @@ import '../global.css';
 
 import { userHook } from "./contexts/UserProvider";
 import { SafeAreaView, View } from "react-native";
-import Loading from "@/app/utils/Loading";
+import Loading from "@/utils/Loading";
 
 export default function Layout() {
 
@@ -25,12 +25,12 @@ export default function Layout() {
                 },
                 headerTintColor: '#fafafa',
                 headerTitle: '',
-              }}/>
+              }} />
             <Stack.Screen name="(drawer)" options={{ headerShown: false, headerTitle: '' }} />
             <Stack.Screen name="(stack)" options={{ headerShown: false, headerTitle: '' }} />
             <Stack.Screen name="recuperarSenha" />
           </Stack>
-          <Toast/>
+          <Toast />
           {loading && <Loading />}
         </View>
       </SafeAreaView>

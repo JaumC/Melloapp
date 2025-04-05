@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import Spacer from '@/app/components/Spacer/Spacer';
+import Spacer from '@/components/Spacer/Spacer';
 
 interface SwitchButtonProps {
   onChangeSwitch?: (text: boolean) => void

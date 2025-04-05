@@ -1,7 +1,7 @@
 import React from 'react';
-import DareSession from './DareProvider';
-import UserSession from './UserProvider';
-import FontsSession from './FontsProvider';
+import DareSession from './Providers/DareProvider';
+import UserSession from './Providers/UserProvider';
+import FontsSession from './Providers/FontsProvider';
 
 export default function GlobalProvider({children}: any) {
     return (

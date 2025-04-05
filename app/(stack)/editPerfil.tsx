@@ -1,18 +1,18 @@
 import { View, Text, StatusBar, ScrollView } from 'react-native';
 import React, { useCallback, useState } from 'react';
 
-import ProfileButton from '@/app/components/Buttons/ProfileButton';
-import ActionButton from '@/app/components/Buttons/ActionButton';
-import Input from '@/app/components/Input/Input';
-import Spacer from '@/app/components/Spacer/Spacer';
-import Line from '@/app/components/Line/Line';
+import ProfileButton from '@/components/Buttons/ProfileButton';
+import ActionButton from '@/components/Buttons/ActionButton';
+import Input from '@/components/Input/Input';
+import Spacer from '@/components/Spacer/Spacer';
+import Line from '@/components/Line/Line';
 
 import { useRouter, useFocusEffect } from 'expo-router';
 import { userHook } from '@/app/contexts/UserProvider';
 
 import * as ImagePicker from "expo-image-picker";
-import { API_URL } from '../utils/API_URL';
-import { notifyToast } from '@/app/utils/Toast';
+import { API_URL } from '../../utils/API_URL';
+import { notifyToast } from '@/utils/Toast';
 
 export default function EditPerfil() {
   const router = useRouter();
