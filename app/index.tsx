@@ -1,4 +1,3 @@
-import { userHook } from "@/app/contexts/UserProvider";
 
 import { View, Text, TouchableOpacity, StatusBar } from 'react-native';
 import React, { useState } from 'react';
@@ -7,6 +6,7 @@ import { useRouter } from 'expo-router';
 import Input from '@/components/Input/Input';
 import Spacer from '@/components/Spacer/Spacer';
 import Button from '@/components/Buttons/ActionButton';
+import { userHook } from '@/contexts/Providers/UserProvider';
 
 export default function Login() {
   const { loginUser } = userHook();

@@ -23,7 +23,7 @@ export default function Layout() {
             <Tabs.Screen 
             name="meusAmigos"
             options={{
-                title: 'Competidor',
+                title: 'Meus Amigos',
                 tabBarIcon: ({ color }) => <FontAwesome5 name="users" size={20} color={color} />
             }}/>
             <Tabs.Screen 

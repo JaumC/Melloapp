@@ -8,11 +8,11 @@ import Spacer from '@/components/Spacer/Spacer';
 import Line from '@/components/Line/Line';
 
 import { useRouter, useFocusEffect } from 'expo-router';
-import { userHook } from '@/app/contexts/UserProvider';
 
 import * as ImagePicker from "expo-image-picker";
 import { API_URL } from '../../utils/API_URL';
 import { notifyToast } from '@/utils/Toast';
+import { userHook } from '@/contexts/Providers/UserProvider';
 
 export default function EditPerfil() {
   const router = useRouter();

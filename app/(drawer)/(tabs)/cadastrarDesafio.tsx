@@ -8,8 +8,8 @@ import ActionButton from '@/components/Buttons/ActionButton'
 import DatePickerInput from '@/components/Input/DatePicker'
 import InputText from '@/components/Input/InputText'
 import { notifyToast } from '@/utils/Toast'
+import { dareHook } from '@/contexts/Providers/DareProvider'
 
-import { dareHook } from '@/app/contexts/DareProvider'
 
 export default function CadastrarDesafio() {
 

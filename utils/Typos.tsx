@@ -9,6 +9,7 @@ export interface User {
     profilePic?: string;
     password?: string;
     dareId?: string;
+    friends?: string[];
 }
 
 export interface Dare {

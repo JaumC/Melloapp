@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, StatusBar, Image } from 'react-native';
+import { View, Text, ScrollView, StatusBar } from 'react-native';
 import { useEffect, useState } from 'react';
 
 import { useRouter } from "expo-router";
@@ -6,12 +6,12 @@ import { useRouter } from "expo-router";
 import Spacer from '@/components/Spacer/Spacer';
 import Line from '@/components/Line/Line';
 import Input from '@/components/Input/Input';
-import { userHook } from '@/app/contexts/UserProvider';
 import { API_URL } from '@/utils/API_URL';
 import ProfileButton from '@/components/Buttons/ProfileButton';
 import SmallButton from '@/components/Buttons/SmallButton';
 
 import Feather from '@expo/vector-icons/Feather';
+import { userHook } from '@/contexts/Providers/UserProvider';
 
 export default function AdcionarCompetidor() {
   const router = useRouter();
@@ -20,7 +20,7 @@ export default function AdcionarCompetidor() {
 
   const [users, setUsers] = useState([])
 
-  const { readAllUsers, addFriend, removeFriend } = userHook();
+  const { readAllUsers, addFriend, removeFriend , user } = userHook();
 
   const searchUsers = async () => {
     if (search.trim() !== '') {
@@ -32,10 +32,12 @@ export default function AdcionarCompetidor() {
   };
 
   const handleAddFriend = async (userId: string) => {
+    const isFriend = user?.friends?.includes(userId)
+
     setPressed((prev) => {
       const newSet = new Set(prev);
 
-      if (newSet.has(userId)) {
+      if (isFriend) {
         newSet.delete(userId);
       } else {
         newSet.add(userId);
@@ -43,7 +45,7 @@ export default function AdcionarCompetidor() {
       return newSet;
     });
 
-    if (pressed.has(userId)) {
+    if (isFriend) {
       await removeFriend(userId);
     } else {
       await addFriend(userId);
@@ -57,6 +59,12 @@ export default function AdcionarCompetidor() {
 
     return () => clearTimeout(timeout);
   }, [search]);
+
+  useEffect(() => {
+    if(user?.friends?.length){
+      setPressed(new Set(user.friends))
+    }
+  },[user])
 
   return (
     <View className='bg-[#fafafa] flex h-full w-full items-center'>
@@ -72,7 +80,7 @@ export default function AdcionarCompetidor() {
           {users?.map((user: any) => {
             const profilePic = `${API_URL}/user/photo/${user?._id}?timestamp=${new Date().getTime()}`;
             return (
-              <View className='w-full flex-row items-center px-12 mb-5'>
+              <View key={user._id} className='w-full flex-row items-center px-12 mb-5'>
                 <View className='flex-row items-center w-full justify-between'>
                   <View className='flex-row items-center'>
                     <ProfileButton w={60} h={60} profilePic={profilePic} />
@@ -88,7 +96,7 @@ export default function AdcionarCompetidor() {
                     </View>
                   </View>
 
-                  <SmallButton pressed={pressed.has(user._id)} onPress={() => handleAddFriend(user?._id)} icon={<Feather name={pressed.has(user._id) ? 'user-plus' : 'user-check'} size={16} color={pressed.has(user._id) ? 'black' : '#0058CB'} />} />
+                  <SmallButton pressed={pressed.has(user._id)} onPress={() => handleAddFriend(user?._id)} icon={<Feather name={pressed.has(user._id) ? 'user-check' : 'user-plus'} size={16} color={pressed.has(user._id) ? '#0058CB' : 'black'} />} />
                 </View>
 
                 <Spacer h={50} />

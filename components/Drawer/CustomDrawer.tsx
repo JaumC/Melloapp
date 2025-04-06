@@ -1,7 +1,6 @@
 import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
 import { View, Text } from "react-native";
 import { useFocusEffect, useRouter } from "expo-router";
-import { userHook } from "@/app/contexts/UserProvider";
 import SmallButton from "@/components/Buttons/SmallButton";
 import ProfileButton from "@/components/Buttons/ProfileButton";
 import Spacer from '@/components/Spacer/Spacer';
@@ -12,6 +11,7 @@ import Feather from '@expo/vector-icons/Feather';
 
 import { useCallback, useState } from "react";
 import { API_URL } from "@/utils/API_URL";
+import { userHook } from "@/contexts/Providers/UserProvider";
 
 export default function CustomDrawer(props: any) {
 

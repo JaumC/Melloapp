@@ -5,9 +5,9 @@ import CustomDrawer from "@/components/Drawer/CustomDrawer";
 import ProfileButton from '@/components/Buttons/ProfileButton';
 import Spacer from '@/components/Spacer/Spacer';
 import { useFocusEffect, useRouter } from 'expo-router';
-import { userHook } from '@/app/contexts/UserProvider';
 import { useState, useCallback } from 'react';
-import { API_URL } from '../../utils/API_URL';
+import { userHook } from '@/contexts/Providers/UserProvider';
+import { API_URL } from '@/utils/API_URL';
 
 export default function Layout() {
 

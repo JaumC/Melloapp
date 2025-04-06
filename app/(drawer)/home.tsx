@@ -5,7 +5,6 @@ import { useRouter } from "expo-router";
 
 import AddButton from '@/components/Buttons/AddButton';
 import Spacer from '@/components/Spacer/Spacer';
-import { userHook } from '@/app/contexts/UserProvider';
 
 export default function Home() {
   const router = useRouter();

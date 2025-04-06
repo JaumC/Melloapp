@@ -11,10 +11,11 @@ interface UserProviderType {
   loginUser: (email: string, password: string) => void;
   addFriend: (userId: string) => void;
   removeFriend: (userId: string) => void;
+  readFriends: (searchFriends: string) => void;
   createUser: (data: FormData) => void;
   updateUser: (data: FormData) => void;
-  readAllUsers: (searchData: string) => void;
   logoutUser: () => void;
+  readAllUsers: (searchData: string) => void;
 }
 
 export const UserContext = createContext<UserProviderType>({
@@ -23,6 +24,7 @@ export const UserContext = createContext<UserProviderType>({
   loginUser: () => { },
   addFriend: () => { },
   removeFriend: () => { },
+  readFriends: () => { },
   createUser: () => { },
   updateUser: () => { },
   logoutUser: () => { },
@@ -92,7 +94,6 @@ export default function UserSession({ children }: PropsWithChildren) {
       SecureStore.setItemAsync("user_data", JSON.stringify(response.data.user));
       notifyToast("success", "Sucesso", response.data.message);
 
-      setLoading(false)
       router.replace("/home");
 
     } catch (error: any) {
@@ -101,6 +102,8 @@ export default function UserSession({ children }: PropsWithChildren) {
       } else {
         notifyToast("error", "Erro", "Não foi possível atualizar os dados.");
       }
+    } finally {
+      setLoading(false)
     }
   };
 
@@ -114,7 +117,6 @@ export default function UserSession({ children }: PropsWithChildren) {
         },
         withCredentials: true
       });
-      setLoading(false)
       return response.data.users
 
     } catch (error: any) {
@@ -123,6 +125,33 @@ export default function UserSession({ children }: PropsWithChildren) {
       } else {
         notifyToast("error", "Erro", "Erro ao se conectar com o servidor.");
       }
+      return []
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const readFriends = async (searchFriends: string) => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`${API_URL}/user/readfriends`, {
+        params: {
+          id: user?.id,
+          search: searchFriends
+        },
+        withCredentials: true
+      });
+      return response.data.users
+
+    } catch (error: any) {
+      if (error.response) {
+        notifyToast("error", "Erro", error.response.data.message);
+      } else {
+        notifyToast("error", "Erro", "Erro ao se conectar com o servidor.");
+      }
+      return []
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -133,8 +162,6 @@ export default function UserSession({ children }: PropsWithChildren) {
     }
 
     setLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 0));
-
     try {
       const response = await axios.post(`${API_URL}/user/login`, { email, password }, { withCredentials: true });
 
@@ -144,7 +171,6 @@ export default function UserSession({ children }: PropsWithChildren) {
       setUser(response.data.user);
       notifyToast("success", "Sucesso", response.data.message);
 
-      setLoading(false)
       router.push("/home");
     } catch (error: any) {
       if (error.response) {
@@ -152,6 +178,8 @@ export default function UserSession({ children }: PropsWithChildren) {
       } else {
         notifyToast("error", "Erro", "Erro ao se conectar com o servidor.");
       }
+    } finally {
+      setLoading(false)
     }
   };
 
@@ -170,15 +198,13 @@ export default function UserSession({ children }: PropsWithChildren) {
   const addFriend = async (friendId: string) => {
     setLoading(true)
     try {
-      const response = await axios.patch(`${API_URL}/user/follow/${user?.id}`, friendId, {
+      const response = await axios.patch(`${API_URL}/user/follow/${user?.id}`, { friendId: friendId }, {
         withCredentials: true,
       });
 
       setUser(response.data.user);
       SecureStore.setItemAsync("user_data", JSON.stringify(response.data.user));
       notifyToast("success", "Sucesso", response.data.message);
-
-      setLoading(false)
 
     } catch (error: any) {
       if (error.response) {
@@ -186,13 +212,15 @@ export default function UserSession({ children }: PropsWithChildren) {
       } else {
         notifyToast("error", "Erro", "Não foi possível adcionar amigo.");
       }
+    } finally {
+      setLoading(false)
     }
   };
 
   const removeFriend = async (friendId: string) => {
     setLoading(true)
     try {
-      const response = await axios.patch(`${API_URL}/user/unfollow/${user?.id}`, friendId, {
+      const response = await axios.patch(`${API_URL}/user/unfollow/${user?.id}`, { friendId: friendId }, {
         withCredentials: true,
       });
 
@@ -200,14 +228,14 @@ export default function UserSession({ children }: PropsWithChildren) {
       SecureStore.setItemAsync("user_data", JSON.stringify(response.data.user));
       notifyToast("success", "Sucesso", response.data.message);
 
-      setLoading(false)
-
     } catch (error: any) {
       if (error.response) {
         notifyToast("error", "Erro", error.response.data.message);
       } else {
         notifyToast("error", "Erro", "Não foi possível remover amigo.");
       }
+    } finally {
+      setLoading(false)
     }
   };
 
@@ -231,11 +259,12 @@ export default function UserSession({ children }: PropsWithChildren) {
         loading,
         addFriend,
         removeFriend,
-        readAllUsers,
+        readFriends,
         createUser,
         updateUser,
         loginUser,
         logoutUser,
+        readAllUsers,
       }}>
       {children}
     </UserContext.Provider>

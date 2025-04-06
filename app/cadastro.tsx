@@ -1,4 +1,3 @@
-import { userHook } from '@/app/contexts/UserProvider';
 
 import { View, Text, ScrollView, StatusBar, TouchableOpacity } from 'react-native'
 
@@ -13,6 +12,7 @@ import * as ImagePicker from "expo-image-picker";
 import React, { useState } from 'react'
 import { notifyToast } from '../utils/Toast';
 import ProfileButton from '../components/Buttons/ProfileButton';
+import { userHook } from '@/contexts/Providers/UserProvider'
 
 export default function Cadastro() {
     const { createUser } = userHook();

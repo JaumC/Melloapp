@@ -11,11 +11,11 @@ import Line from '@/components/Line/Line'
 import Feather from '@expo/vector-icons/Feather';
 
 import { useFocusEffect, useRouter } from 'expo-router'
-import { userHook } from '@/app/contexts/UserProvider'
 
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { notifyToast } from '@/utils/Toast'
 import { API_URL } from '../../utils/API_URL';
+import { userHook } from '@/contexts/Providers/UserProvider';
 
 export default function Perfil() {
 
