@@ -19,7 +19,8 @@ export interface Dare {
     endDate?: string;
     days?: string;
     weekend?: boolean;
-    friends?: string;
+    friends?: string[];
+    host?: string;
     sequencyDay?: string;
     sequencyMounth?: string;
     streak?: string;

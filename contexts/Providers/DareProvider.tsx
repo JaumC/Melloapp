@@ -37,16 +37,17 @@ export default function DareSession({ children }: PropsWithChildren) {
 
   const router = useRouter()
 
-  const createDare = async (dateDare: Dare) => {
-    if (!dateDare.name || !dateDare.startDate || !dateDare.endDate || !dateDare.streak || !dateDare.sequencyDay || !dateDare.sequencyMounth) {
+  const createDare = async (dataDare: Dare) => {
+    console.log(dataDare)
+    if (!dataDare.name || !dataDare.startDate || !dataDare.endDate || !dataDare.days || !dataDare.friends || !dataDare.host || !dataDare.streak || !dataDare.sequencyDay || !dataDare.sequencyMounth) {
       notifyToast("error", "Erro", 'Preencha todos os campos.');
       return;
     }
+
     setLoading(true)
-    await axios.post(`${API_URL}/dare/create`, dateDare)
+    await axios.post(`${API_URL}/dare/create`, dataDare)
       .then((response) => {
         notifyToast("success", "Sucesso", response.data.message);
-        router.push('/');
       })
       .catch((error) => {
         if (error.response) {
@@ -58,7 +59,6 @@ export default function DareSession({ children }: PropsWithChildren) {
       .finally(() => {
         setLoading(false)
       })
-    // setDare(dateDare)
   }
 
   const readDare = async () => {

@@ -134,13 +134,13 @@ export default function UserSession({ children }: PropsWithChildren) {
   const readFriends = async (searchFriends: string) => {
     setLoading(true);
     try {
-      const response = await axios.get(`${API_URL}/user/readfriends`, {
-        params: {
-          id: user?.id,
-          search: searchFriends
-        },
-        withCredentials: true
-      });
+        const response = await axios.get(`${API_URL}/user/readfriends`, {
+          params: {
+            id: user?.id,
+            search: searchFriends
+          },
+          withCredentials: true
+        });
       return response.data.users
 
     } catch (error: any) {

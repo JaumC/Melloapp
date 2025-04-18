@@ -4,38 +4,34 @@ import React, { useState } from 'react'
 
 interface DatePickerInputProps {
   placeholder?: string
-  onChangeDate?: (event: any, date?: Date) => void
+  onChangeDate?: (date: Date) => void
+  value?: string
   text?: string
   w?: number
   h?: number
 }
 
-const DatePickerInput = ({ w = 274, h = 40, text, placeholder, onChangeDate }: DatePickerInputProps) => {
-  const [date, setDate] = useState(new Date());
+const DatePickerInput = ({ w = 274, h = 40, text, placeholder, onChangeDate, value }: DatePickerInputProps) => {
   const [showPicker, setShowPicker] = useState(false);
 
   const toggleDate = () => setShowPicker(!showPicker);
 
-  const onChange = ({ type }: { type: string }, selectedDate: Date | undefined) => {
-    if (type === 'set') {
-      const currentDate: any = selectedDate;
-      setDate(currentDate);
-      toggleDate();
-      if (onChangeDate) onChangeDate(currentDate); 
-    } else {
-      toggleDate();
+  const onChange = (_: any, selectedDate?: Date) => {
+    toggleDate();
+    if (selectedDate && onChangeDate) {
+      onChangeDate(selectedDate);
     }
   };
 
   return (
     <View>
-      <Text className="font-robotoThin text-[13px] font-[100] color-[#816B66] pl-[20px]">{text}</Text>
+      <Text className="font-robotoThin text-[13px] font-[100] color-[#816B66] text-center">{text}</Text>
       {showPicker && (
         <DateTimePicker
           style={{ width: w, height: h }}
           mode="date"
           display="calendar"
-          value={date}
+          value={value ? parseDate(value) : new Date()}
           onChange={onChange}
         />
       )}
@@ -43,16 +39,22 @@ const DatePickerInput = ({ w = 274, h = 40, text, placeholder, onChangeDate }: D
         <TouchableOpacity onPress={toggleDate}>
           <TextInput
             placeholder={placeholder}
-            value={date.toLocaleDateString('pt-BR')}
+            value={value}
             editable={false}
             placeholderTextColor="#C4A59D"
-            className="outline-none border rounded-[20px] border-[#C4A59D] pl-[20px]"
+            className="outline-none border rounded-[20px] border-[#C4A59D] text-center"
             style={{ width: w, height: h }}
           />
         </TouchableOpacity>
       )}
     </View>
   );
+};
+
+// Função auxiliar para converter string 'DD/MM/YYYY' para Date
+const parseDate = (dateString: string) => {
+  const [day, month, year] = dateString.split('/').map(Number);
+  return new Date(year, month - 1, day);
 };
 
 export default DatePickerInput
