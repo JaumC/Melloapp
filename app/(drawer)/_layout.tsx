@@ -45,7 +45,7 @@ export default function Layout() {
         drawerContent={(props) => <CustomDrawer {...props} />}>
         <Drawer.Screen name="home" />
         <Drawer.Screen name="cadastrarDesafio" />
-        <Drawer.Screen name="adcionarCompetidor" />
+        <Drawer.Screen name="adicionarCompetidor" />
         <Drawer.Screen name="meusAmigos" />
         <Drawer.Screen name="historicoDesafio" />
       </Drawer>

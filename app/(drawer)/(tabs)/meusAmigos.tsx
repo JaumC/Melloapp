@@ -52,10 +52,10 @@ export default function MeusAmigos() {
   useEffect(() => {
     const timeout = setTimeout(() => {
       searchFriends();
-    }, 300);
+    }, 200);
 
     return () => clearTimeout(timeout);
-  }, []);
+  }, [search]);
 
   useEffect(() => {
     if (user?.friends?.length) {

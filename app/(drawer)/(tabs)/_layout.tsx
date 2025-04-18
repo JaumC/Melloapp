@@ -15,7 +15,7 @@ export default function Layout() {
                 tabBarIcon: ({ color }) => <FontAwesome6 name="trophy" size={20} color={color} />,
             }}/>
             <Tabs.Screen 
-            name="adcionarCompetidor"
+            name="adicionarCompetidor"
             options={{
                 title: 'Competidor',
                 tabBarIcon: ({ color })  => <FontAwesome6 name="handshake-simple" size={20} color={color} />,

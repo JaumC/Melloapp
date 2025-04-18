@@ -13,7 +13,7 @@ import SmallButton from '@/components/Buttons/SmallButton';
 import Feather from '@expo/vector-icons/Feather';
 import { userHook } from '@/contexts/Providers/UserProvider';
 
-export default function AdcionarCompetidor() {
+export default function AdicionarCompetidor() {
   const router = useRouter();
   const [search, setSearch] = useState('');
   const [pressed, setPressed] = useState(new Set());

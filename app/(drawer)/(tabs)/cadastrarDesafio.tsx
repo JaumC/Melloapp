@@ -1,4 +1,4 @@
-import { View, Text, StatusBar, ScrollView } from 'react-native'
+import { View, Text, StatusBar, ScrollView, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Spacer from '@/components/Spacer/Spacer'
 import Line from '@/components/Line/Line'
@@ -9,11 +9,14 @@ import DatePickerInput from '@/components/Input/DatePicker'
 import InputText from '@/components/Input/InputText'
 import { notifyToast } from '@/utils/Toast'
 import { dareHook } from '@/contexts/Providers/DareProvider'
+import Modal from '@/utils/Modal'
 
 
 export default function CadastrarDesafio() {
 
   const { createDare } = dareHook()
+
+  const [showModal, setShowModal] = useState(false)
 
   const [dataStart, setDataStart] = useState('')
   const [dataEnd, setDataEnd] = useState('')
@@ -110,7 +113,9 @@ export default function CadastrarDesafio() {
             <Spacer h={30} />
           )}
           <View className='flex-row'>
-            <Input text='ADCIONAR COMPETIDOR' placeholder='Digite algo...' w={190} />
+            <TouchableOpacity onPress={() => setShowModal(true)}>
+              <InputText header='ADCIONAR COMPETIDOR' placeholder={friends} w={190} />
+            </TouchableOpacity>
             <Spacer w={20} />
             <InputText text={`${friends.length + 1}/8`} w={60} />
           </View>
@@ -130,6 +135,11 @@ export default function CadastrarDesafio() {
           <ActionButton text='CRIAR DESAFIO' onPress={() => handleRegister()} />
         </View>
       </ScrollView>
+      <Modal modal={showModal} onOpen={setShowModal}>
+          <View className='h-[95%]'>
+
+          </View>
+      </Modal>
     </View>
   )
 }

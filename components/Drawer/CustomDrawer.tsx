@@ -69,7 +69,7 @@ export default function CustomDrawer(props: any) {
 
           <DrawerItem
             label="ADCIONAR COMPETIDOR"
-            onPress={() => router.push("/adcionarCompetidor")}
+            onPress={() => router.push("/adicionarCompetidor")}
             icon={() => <FontAwesome6 name="handshake-simple" size={20} color="#424040" />}
             style={{ borderRadius: 0 }}
           />
