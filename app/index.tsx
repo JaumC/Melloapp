@@ -5,7 +5,7 @@ import { useRouter } from 'expo-router';
 
 import Input from '@/components/Input/Input';
 import Spacer from '@/components/Spacer/Spacer';
-import Button from '@/components/Buttons/ActionButton';
+import ActionButton from '@/components/Buttons/ActionButton';
 import { userHook } from '@/contexts/Providers/UserProvider';
 
 export default function Login() {
@@ -35,7 +35,7 @@ export default function Login() {
           <Text className='font-robotoThin color-[#004C72]'>Esqueci minha senha</Text>
         </TouchableOpacity>
         <Spacer h={50} />
-        <Button text='LOGAR' onPress={() => handleLogin()} />
+        <ActionButton text='LOGAR' onPress={() => handleLogin()} />
         <TouchableOpacity className='flex items-center justify-center' onPress={() => router.push('/cadastro')}>
           <Spacer h={9} />
           <Text className='font-robotoThin color-[#004C72]'>Não tem conta? Cadastre-se</Text>

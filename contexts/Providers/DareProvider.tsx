@@ -4,6 +4,7 @@ import { API_URL } from '@/utils/API_URL';
 import { useRouter } from "expo-router";
 import { Dare } from '@/utils/Typos';
 import axios from 'axios';
+import { userHook } from './UserProvider';
 
 
 interface DareProviderType {
@@ -37,8 +38,9 @@ export default function DareSession({ children }: PropsWithChildren) {
 
   const router = useRouter()
 
+  const { user } = userHook()
+
   const createDare = async (dataDare: Dare) => {
-    console.log(dataDare)
     if (!dataDare.name || !dataDare.startDate || !dataDare.endDate || !dataDare.days || !dataDare.friends || !dataDare.host || !dataDare.streak || !dataDare.sequencyDay || !dataDare.sequencyMounth) {
       notifyToast("error", "Erro", 'Preencha todos os campos.');
       return;
@@ -50,11 +52,7 @@ export default function DareSession({ children }: PropsWithChildren) {
         notifyToast("success", "Sucesso", response.data.message);
       })
       .catch((error) => {
-        if (error.response) {
-          notifyToast("error", "Erro", error.response.data.message);
-        } else {
-          notifyToast("error", "Erro", 'Erro ao se conectar com o servidor.');
-        }
+          notifyToast("error", "Erro", error.response.data.message || 'Erro ao se conectar com o servidor.');
       })
       .finally(() => {
         setLoading(false)
@@ -62,7 +60,18 @@ export default function DareSession({ children }: PropsWithChildren) {
   }
 
   const readDare = async () => {
+    setLoading(true)
+    try{
+      const response = await axios.get(`${API_URL}/dare/read/${user?.id}`,{
+        withCredentials: true,
+      })
+      return response.data.dare
 
+    }catch(error: any){
+      notifyToast("error", "Erro", error.response.data.message || 'Erro ao se conectar com o servidor.');
+    }finally{
+      setLoading(false)
+    }
   };
 
   const updateDare = async () => {

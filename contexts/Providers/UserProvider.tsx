@@ -9,6 +9,7 @@ interface UserProviderType {
   user: User | null;
   loading: boolean;
   loginUser: (email: string, password: string) => void;
+  recuperarUser: (email: string, senha: string, confirmarSenha: string) => void;
   addFriend: (userId: string) => void;
   removeFriend: (userId: string) => void;
   readFriends: (searchFriends: string) => void;
@@ -23,6 +24,7 @@ export const UserContext = createContext<UserProviderType>({
   loading: false,
   loginUser: () => { },
   addFriend: () => { },
+  recuperarUser: () => { },
   removeFriend: () => { },
   readFriends: () => { },
   createUser: () => { },
@@ -134,13 +136,13 @@ export default function UserSession({ children }: PropsWithChildren) {
   const readFriends = async (searchFriends: string) => {
     setLoading(true);
     try {
-        const response = await axios.get(`${API_URL}/user/readfriends`, {
-          params: {
-            id: user?.id,
-            search: searchFriends
-          },
-          withCredentials: true
-        });
+      const response = await axios.get(`${API_URL}/user/readfriends`, {
+        params: {
+          id: user?.id,
+          search: searchFriends
+        },
+        withCredentials: true
+      });
       return response.data.users
 
     } catch (error: any) {
@@ -194,6 +196,34 @@ export default function UserSession({ children }: PropsWithChildren) {
       notifyToast("error", "Erro", "Erro ao deslogar.");
     }
   };
+
+  const recuperarUser = async (email: string, senha: string, confirmarSenha: string) => {
+    if (!email || !senha || !confirmarSenha) {
+      notifyToast("error", "Erro", "Prencha todos os campos.")
+      return
+    }
+
+    if (senha !== confirmarSenha) {
+      notifyToast("error", "Erro", "As senhas não coincidem.")
+      return
+    }
+
+    setLoading(true);
+    try {
+      const response = await axios.post(`${API_URL}/user/recover`, { email, senha, confirmarSenha }, { withCredentials: true })
+
+      setUser(response.data.user);
+      console.log(response.data.user)
+      console.log(response)
+      notifyToast("success", "Sucesso", response.data.message);
+
+      router.push("/");
+    } catch (error: any) {
+      notifyToast("error", "Erro", error.response.data.message || "Erro ao se conectar com o servidor.");
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const addFriend = async (friendId: string) => {
     setLoading(true)
@@ -259,6 +289,7 @@ export default function UserSession({ children }: PropsWithChildren) {
         loading,
         addFriend,
         removeFriend,
+        recuperarUser,
         readFriends,
         createUser,
         updateUser,

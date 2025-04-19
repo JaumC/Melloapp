@@ -25,7 +25,15 @@ export default function Layout() {
               }} />
             <Stack.Screen name="(drawer)" options={{ headerShown: false, headerTitle: '' }} />
             <Stack.Screen name="(stack)" options={{ headerShown: false, headerTitle: '' }} />
-            <Stack.Screen name="recuperarSenha" />
+            <Stack.Screen
+              name="recuperarSenha"
+              options={{
+                headerStyle: {
+                  backgroundColor: '#C4A59D',
+                },
+                headerTintColor: '#fafafa',
+                headerTitle: '',
+              }} />
           </Stack>
           <Toast />
           <Loading />
