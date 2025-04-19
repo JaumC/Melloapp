@@ -15,8 +15,8 @@ export interface User {
 export interface Dare {
     id?: string,
     name?: string;
-    startDate?: string;
-    endDate?: string;
+    start_date?: string;
+    end_date?: string;
     days?: string;
     weekend?: boolean;
     friends?: string[];

@@ -42,7 +42,7 @@ export default function Home() {
       {dares.length > 0 ? (
         <ScrollView showsVerticalScrollIndicator={false} className="w-full px-2">
           {dares.map((dare: any) => (
-            <View key={dare?._id} className='w-full h-[367px] flex justify-center items-center mb-4'>
+            <View key={dare?._id} className='w-full flex justify-center items-center mb-4'>
               <DareCard dareData={dare}/>
             </View>
           ))}
