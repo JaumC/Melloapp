@@ -6,6 +6,7 @@ import { SafeAreaView, View } from "react-native";
 import Loading from "@/utils/Loading";
 import GlobalContext from '@/contexts/GlobalContext'
 
+
 export default function Layout() {
 
   return (
@@ -26,7 +27,25 @@ export default function Layout() {
             <Stack.Screen name="(drawer)" options={{ headerShown: false, headerTitle: '' }} />
             <Stack.Screen name="(stack)" options={{ headerShown: false, headerTitle: '' }} />
             <Stack.Screen
+              name="+not-found"
+              options={{
+                headerStyle: {
+                  backgroundColor: '#C4A59D',
+                },
+                headerTintColor: '#fafafa',
+                headerTitle: '',
+              }} />
+            <Stack.Screen
               name="recuperarSenha"
+              options={{
+                headerStyle: {
+                  backgroundColor: '#C4A59D',
+                },
+                headerTintColor: '#fafafa',
+                headerTitle: '',
+              }} />
+          <Stack.Screen
+              name="dare/[id]"
               options={{
                 headerStyle: {
                   backgroundColor: '#C4A59D',
@@ -40,6 +59,5 @@ export default function Layout() {
         </View>
       </SafeAreaView>
     </GlobalContext>
-
   );
 }

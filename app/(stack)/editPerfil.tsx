@@ -1,4 +1,9 @@
-import { View, Text, StatusBar, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StatusBar, Button, Modal, TouchableOpacity } from 'react-native';
+import ColorPicker, { Panel1, Swatches, Preview, OpacitySlider, HueSlider } from 'reanimated-color-picker';
+import { ScrollView } from 'react-native-gesture-handler';
+
+import { runOnJS } from 'react-native-reanimated';
+
 import React, { useCallback, useState } from 'react';
 
 import ProfileButton from '@/components/Buttons/ProfileButton';
@@ -10,7 +15,6 @@ import Line from '@/components/Line/Line';
 import { useRouter, useFocusEffect } from 'expo-router';
 
 import * as ImagePicker from "expo-image-picker";
-import ColorSelector from '../../components/ColorSelector/ColorSelector'
 
 import { API_URL } from '../../utils/API_URL';
 import { notifyToast } from '@/utils/Toast';
@@ -20,13 +24,18 @@ export default function EditPerfil() {
   const router = useRouter();
   const { updateUser, user } = userHook();
 
+  const [showModal, setShowModal] = useState(false);
+
   const [newNick, setNewNick] = useState(user?.nickname || '');
   const [newColor, setNewColor] = useState(user?.color || '');
   const [newName, setNewName] = useState(user?.name || '');
   const [newEmail, setNewEmail] = useState(user?.email || '');
   const [newProfilePic, setNewProfilePic] = useState(user?.profilePic || '');
 
-  const [selectedColor, setSelectedColor] = useState(user?.color || '#ffffff');
+  const onSelectColor = ({ hex }: any) => {
+    'worklet';
+    runOnJS(setNewColor)(hex);
+  };
 
   const pickImage = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -99,15 +108,34 @@ export default function EditPerfil() {
           <View className='flex-row'>
             <ProfileButton profilePic={newProfilePic} onPress={pickImage} text='IMAGEM' />
           </View>
-          <View className='absolute right-[50px] top-[115px] border p-[4px]'>
-            <ColorSelector
-              selectedColor={selectedColor}
-              setSelectedColor={(hex) => {
-                setSelectedColor(hex);
-                setNewColor(hex);
-              }}
+          <View className="absolute right-[70px] top-[105px] h-[40px] w-[40px] rounded-[12px] border p-[3px]">
+            <TouchableOpacity
+              style={{ backgroundColor: newColor }}
+              className="h-full rounded-[10px] w-full"
+              onPress={() => setShowModal(true)}
             />
+            <Modal visible={showModal} animationType="slide" transparent={false}>
+              <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <ColorPicker
+                  style={{ width: '90%' }}
+                  value={newColor}
+                  onComplete={onSelectColor}>
+                  <Preview />
+                  <Spacer h={4} />
+                  <Panel1 />
+                  <Spacer h={24} />
+                  <HueSlider />
+                  <Spacer h={24} />
+                  <OpacitySlider />
+                  <Spacer h={24} />
+                  <Swatches />
+                  <Spacer h={24} />
+                </ColorPicker>
+                <ActionButton text='SALVAR' onPress={() => setShowModal(false)} />
+              </View>
+            </Modal>
           </View>
+
           <Spacer h={60} />
           <Line />
           <Spacer h={25} />

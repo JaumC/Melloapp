@@ -66,7 +66,7 @@ export default function Perfil() {
 
           <Text className='font-cormorantSC text-[20px]'>perfil</Text>
           <Spacer h={24} />
-          <View className={`flex-row p-[4px] rounded-full border-[2px] border-[${user?.color}]`}>
+          <View style={{borderColor: user?.color }} className='flex-row p-[4px] rounded-full border-[2px]'>
             <ProfileButton profilePic={profilePic} text='IMAGEM' />
           </View>
           <View className='absolute right-[50px] top-[115px]'>
