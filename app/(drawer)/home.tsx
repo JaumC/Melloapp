@@ -28,8 +28,6 @@ export default function Home() {
     getDare()
   }, [])
 
-  console.log(dares)
-
   return (
     <View className='bg-[#fafafa] flex-1 w-full items-center'>
       <StatusBar barStyle="light-content" backgroundColor="#C4A59D" />

@@ -58,7 +58,7 @@ export default function Perfil() {
       <StatusBar barStyle="dark-content" backgroundColor="#fafafa" />
       <ScrollView showsVerticalScrollIndicator={false} className='w-full'>
 
-        <TouchableOpacity onPress={() => copyId()} className='z-[2] absolute right-[140px] top-[290px]'>
+        <TouchableOpacity onPress={() => copyId()} className='z-[2] absolute right-[140px] top-[300px]'>
           <FontAwesome6 name="copy" size={15} color="#5C5A5A" />
         </TouchableOpacity>
         <View className='flex-col items-center justify-center'>
@@ -66,7 +66,7 @@ export default function Perfil() {
 
           <Text className='font-cormorantSC text-[20px]'>perfil</Text>
           <Spacer h={24} />
-          <View className='flex-row'>
+          <View className={`flex-row p-[4px] rounded-full border-[2px] border-[${user?.color}]`}>
             <ProfileButton profilePic={profilePic} text='IMAGEM' />
           </View>
           <View className='absolute right-[50px] top-[115px]'>

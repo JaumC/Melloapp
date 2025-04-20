@@ -8,7 +8,7 @@ export interface User {
     search_id?: string;
     profilePic?: string;
     password?: string;
-    dareId?: string;
+    color?: string;
     friends?: string[];
 }
 

@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, View } from 'react-native'
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6'
 import Spacer from '../Spacer/Spacer'
@@ -16,14 +16,30 @@ const DareCard = ({ dareData }: DareProps) => {
         dareData?.end_date || '',
         dareData?.weekend || false,
     )
-    const [markedDays, setMarkedDays] = useState(false)
+
+    const [markedDays, setMarkedDays] = useState(new Set())
+
     const weekend = dareData?.weekend ? 7 : 5
-    console.log(days)
-    console.log(dareData?.start_date)
+    let today = moment().format("YYYY-MM-DD")
+
+    const handleCheckDay = async(dayId: string) => {
+        setMarkedDays((prev) => {
+            const newSet = new Set(prev)
+            if(newSet.has(dayId)){
+                newSet.delete(dayId)
+            }else{
+                if(dayId == today){
+                    newSet.add(dayId)
+                }
+                return newSet
+            }
+            return newSet
+        })
+    }
 
     return (
         <>
-            <View className='w-[95%] h-[32px] bg-[#A3BBA3] rounded-t-[8px] shadow-md shadow-black flex-row justify-between items-center px-4'>
+            <View className='w-[95%] h-[32px] bg-[#A3BBA3] rounded-t-[8px] shadow-md shadow-black flex-row justify-between items-center mt-2 px-4'>
                 <View className='flex-row items-center'>
                     <FontAwesome6 name="trophy" size={19} color="white" />
                     <Spacer w={10} />
@@ -32,19 +48,48 @@ const DareCard = ({ dareData }: DareProps) => {
                 <Feather name="edit" size={20} color="#545252" />
             </View>
             <View className='flex-col w-[95%] bg-[#F7E5E2] shadow-md shadow-black rounded-b-[8px]'>
-                <View className='w-[100%] flex-row  content-start p-2 justify-start'>
-                    {chunckIntoColumns(days, weekend).map((column, colIndex) => (
-                        <View key={colIndex} className='flex-col'>
-                            {column.map((dayIndex) => (
-                                <TouchableOpacity onPress={() => setMarkedDays(mark => !mark)} key={dayIndex} className={`w-[30px] h-[30px] rounded-md m-[3px] ${markedDays ? 'bg-purple-600' : 'bg-gray-300'}`} />
+                <View className='w-[100%] flex-row content-start p-4 justify-start'>
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                        {(() => {
+                            const realColumns = chunckIntoColumns(days, weekend)
+                            const minColumns = 9
+                            const totalColumns = [...realColumns]
 
-                            ))}
-                        </View>
-                    ))}
+                            while (totalColumns.length < minColumns) {
+                                totalColumns.push([]) // coluna vazia
+                            }
+
+                            return totalColumns.map((column, colIndex) => (
+                                <View key={colIndex} className="flex-col">
+                                    {column.map((dayIndex) => (
+                                        <TouchableOpacity
+                                            onPress={() => handleCheckDay(dayIndex)}
+                                            key={dayIndex}
+                                            className={`w-[30px] h-[30px] flex items-center justify-center rounded-md m-[3px] 
+                                             ${today === dayIndex ? 'border border-[#FC9127]' : ''} 
+                                             ${markedDays.has(dayIndex) ? 'bg-purple-600' : 'bg-[#D9D9D9]'}`}>
+                                            {today === dayIndex && !markedDays.has(dayIndex) && (
+                                                <Feather name="check" size={15} color="#FC9127" />
+                                            )}
+                                        </TouchableOpacity>
+                                    ))}
+
+                                    {/* Preenchimento vertical com quadrados vazios */}
+                                    {Array.from({ length: weekend - column.length }).map((_, i) => (
+                                        <View
+                                            key={`placeholder-${colIndex}-${i}`}
+                                            className="w-[30px] h-[30px] m-[3px] rounded-md border border-[#D9D9D9] bg-transparent"
+                                        />
+                                    ))}
+                                </View>
+                            ))
+                        })()}
+                    </ScrollView>
+
                 </View>
                 <View className='flex-row w-full justify-between px-4 pb-2'>
-                    <Text>{dareData?.days + 'D'}</Text>
-                    <Text>{dareData?.streak + 'PTS'}</Text>
+                    <Text className='text-[#545252]'>{dareData?.days + 'D'}</Text>
+                    <Text className='text-[#545252]'>{dareData?.streak + 'PTS'}</Text>
                 </View>
             </View>
         </>
@@ -75,13 +120,3 @@ function chunckIntoColumns<T>(array: T[], size: number): T[][] {
     }
     return result
 }
-
-// <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-//   {columns.map((col, colIndex) => (
-//     <View key={colIndex} className="flex-col items-center">
-//       {col.map((day, index) => (
-//         <TouchableOpacity key={index} className="w-[30px] h-[30px] m-[3px] bg-gray-300 rounded-md" />
-//       ))}
-//     </View>
-//   ))}
-// </ScrollView>
