@@ -11,21 +11,11 @@ import DareCard from '@/components/Dare/DareCard';
 
 export default function Home() {
   const router = useRouter();
-  const [dares, setDares] = useState([]);
 
-  const { readDare } = dareHook()
-
-  const getDare = async () => {
-    const response: any = await readDare()
-    if (response) {
-      setDares(response)
-    } else {
-      setDares([])
-    }
-  }
+  const { readDare, dare } = dareHook()
 
   useEffect(() => {
-    getDare()
+    readDare()
   }, [])
 
   return (
@@ -37,11 +27,11 @@ export default function Home() {
       <Line />
       <Spacer h={20} />
 
-      {dares.length > 0 ? (
+      {dare ? (
         <ScrollView showsVerticalScrollIndicator={false} className="w-full px-2">
-          {dares.map((dare: any) => (
-            <View key={dare?._id} className='w-full flex justify-center items-center mb-4'>
-              <DareCard dareData={dare} onOpen={() => router.push(`/dare/${dare?._id}`)}/>
+          {dare?.map((d: any) => (
+            <View key={d?.dare._id} className='w-full flex justify-center items-center mb-4'>
+              <DareCard dare={d?.dare} dayPoints={d?.dayPoints} onOpen={() => router.push(`/dare/${d?.dare?._id}`)}/>
             </View>
           ))}
           <Spacer h={60} />

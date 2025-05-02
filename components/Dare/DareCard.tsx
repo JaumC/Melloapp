@@ -1,47 +1,78 @@
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6'
 import Spacer from '../Spacer/Spacer'
 import Feather from '@expo/vector-icons/Feather'
-import { Dare } from '@/utils/Typos'
+import { Dare, DayPoint } from '@/utils/Typos'
 import moment from 'moment'
 import { userHook } from '@/contexts/Providers/UserProvider'
 import { useRouter } from 'expo-router'
+import { dareHook } from '@/contexts/Providers/DareProvider'
 
 interface DareProps {
-    dareData?: Dare
+    dare?: Dare
+    dayPoints?: DayPoint 
     onOpen?: () => void
 }
 
-const DareCard = ({ dareData, onOpen }: DareProps) => {
+const DareCard = ({ dare, dayPoints, onOpen }: DareProps) => {
     const days = generateDays(
-        dareData?.start_date || '',
-        dareData?.end_date || '',
-        dareData?.weekend || false,
+        dare?.start_date || '',
+        dare?.end_date || '',
+        dare?.weekend || false,
     )
 
     const [markedDays, setMarkedDays] = useState(new Set())
 
     const { user } = userHook()
+    const { addDay, removeDay } = dareHook()
+    
     const router = useRouter()
 
-    const weekend = dareData?.weekend ? 7 : 5
+    const weekend = dare?.weekend ? 7 : 5
     let today = moment().format("YYYY-MM-DD")
 
-    const handleCheckDay = async(dayId: string) => {
+    const handleCheckDay = async (dayId: string) => {
+        if (dayId !== today || !user) return;
+
         setMarkedDays((prev) => {
-            const newSet = new Set(prev)
-            if(newSet.has(dayId)){
-                newSet.delete(dayId)
-            }else{
-                if(dayId == today){
-                    newSet.add(dayId)
-                }
-                return newSet
+            const newSet = new Set(prev);
+
+            if (newSet.has(dayId)) {
+                newSet.delete(dayId);
+            } else {
+                newSet.add(dayId);
             }
-            return newSet
-        })
-    }
+
+            return newSet;
+        });
+
+        if (!dare?._id) return; 
+
+        if (markedDays.has(dayId)) {
+            await removeDay(dare?._id, dayId);
+        } else {
+            await addDay(dare?._id, dayId);
+        }
+    };
+
+    useEffect(() => {
+        console.log(dayPoints)
+        console.log(dayPoints?.days)
+        if (!dayPoints?.days || !user) return
+
+        const marked = new Set<string>()
+
+        const allDays = dayPoints.days
+        for (const [date, entries] of Object.entries(allDays)){
+            if (Array.isArray(entries) && entries.some((e: { user_id: string }) => e.user_id === user.id)) {
+                marked.add(date)
+            }
+        }
+        setMarkedDays(marked)
+        console.log(marked)
+    }, [dayPoints, user])
+    console.log(markedDays)
 
     return (
         <>
@@ -49,11 +80,11 @@ const DareCard = ({ dareData, onOpen }: DareProps) => {
                 <View className='flex-row items-center'>
                     <FontAwesome6 name="trophy" size={19} color="white" />
                     <Spacer w={10} />
-                    <Text className="text-[#545252] my-2">{dareData?.name}</Text>
+                    <Text className="text-[#545252] my-2">{dare?.name}</Text>
                 </View>
-                <Feather onPress={() => router.push('/editDare')} name="edit" size={20} color="#545252" />
+                <Feather /*onPress={() => router.push('/editDare')}*/ name="edit" size={20} color="#545252" />
             </TouchableOpacity>
-            <TouchableOpacity onPress={onOpen} className='flex-col w-[95%] bg-[#F7E5E2] shadow-md shadow-black rounded-b-[8px]'>
+            <View className='flex-col w-[95%] bg-[#F7E5E2] shadow-md shadow-black rounded-b-[8px]'>
                 <View className='w-[100%] flex-row content-start p-4 justify-start'>
                     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                         {(() => {
@@ -71,11 +102,11 @@ const DareCard = ({ dareData, onOpen }: DareProps) => {
                                         <TouchableOpacity
                                             onPress={() => handleCheckDay(dayIndex)}
                                             key={dayIndex}
-                                            style={{ 
+                                            style={{
                                                 backgroundColor: markedDays.has(dayIndex) ? user?.color : '#D9D9D9',
                                                 borderWidth: markedDays.has(dayIndex) ? 0 : 1,
                                                 borderColor: today === dayIndex ? user?.color : '#D9D9D9',
-                                            }} 
+                                            }}
                                             className='w-[30px] h-[30px] flex items-center justify-center rounded-md m-[3px]'>
                                             {today === dayIndex && !markedDays.has(dayIndex) && (
                                                 <Feather name="check" size={15} color={user?.color} />
@@ -97,10 +128,10 @@ const DareCard = ({ dareData, onOpen }: DareProps) => {
 
                 </View>
                 <View className='flex-row w-full justify-between px-4 pb-2'>
-                    <Text className='text-[#545252]'>{dareData?.days + 'D'}</Text>
-                    <Text className='text-[#545252]'>{dareData?.streak + 'PTS'}</Text>
+                    <Text className='text-[#545252]'>{dare?.days + 'D'}</Text>
+                    <Text className='text-[#545252]'>{dare?.streak + 'PTS'}</Text>
                 </View>
-            </TouchableOpacity>
+            </View>
         </>
     )
 }

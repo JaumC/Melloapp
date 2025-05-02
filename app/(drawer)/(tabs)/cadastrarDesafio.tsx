@@ -74,11 +74,10 @@ export default function CadastrarDesafio() {
   };
 
   const handleRegister = async () => {
-    console.log(dareName, dataStart, dataEnd, days, onWeekends, selectedFriends, user?.id, dareSequenceDay, dareSequenceMounth, dareStreak)
     const dareData = {
       name: dareName,
-      startDate: dataStart,
-      endDate: dataEnd,
+      start_date: dataStart,
+      end_date: dataEnd,
       days: days,
       weekend: onWeekends,
       friends: Array.from(selectedFriends),
@@ -94,12 +93,12 @@ export default function CadastrarDesafio() {
     setDataStart('');
     setDataEnd('');
     setDays('');
-    setOnWeekends(true);
     setSelectedFriends(new Set());
     setDareSequenceDay('');
     setDareSequenceMounth('');
     setDareStreak('');
     setShowModal(false);
+    setOnWeekends(true);
 
   }
 

@@ -12,8 +12,13 @@ export interface User {
     friends?: string[];
 }
 
+export interface DareWithDayPoints {
+    dare: Dare;
+    dayPoints: DayPoint;
+}
+
 export interface Dare {
-    id?: string,
+    _id?: string,
     name?: string;
     start_date?: string;
     end_date?: string;
@@ -25,4 +30,16 @@ export interface Dare {
     sequencyMounth?: string;
     streak?: string;
     finishedDare?: boolean;
-  }
+}
+
+export interface DayPoint {
+    days: {
+        [date: string]: DayEntry[];
+    };
+}
+
+export interface DayEntry {
+    user_id: string;
+    marked_at: Date;
+    points: number;
+}

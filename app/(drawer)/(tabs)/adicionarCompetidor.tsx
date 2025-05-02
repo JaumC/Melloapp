@@ -20,7 +20,7 @@ export default function AdicionarCompetidor() {
 
   const [users, setUsers] = useState([])
 
-  const { readAllUsers, addFriend, removeFriend , user } = userHook();
+  const { readAllUsers, addFriend, removeFriend, user } = userHook();
 
   const searchUsers = async () => {
     if (search.trim() !== '') {
@@ -61,10 +61,10 @@ export default function AdicionarCompetidor() {
   }, [search]);
 
   useEffect(() => {
-    if(user?.friends?.length){
+    if (user?.friends?.length) {
       setPressed(new Set(user.friends))
     }
-  },[user])
+  }, [user])
 
   return (
     <View className='bg-[#fafafa] flex h-full w-full items-center'>
