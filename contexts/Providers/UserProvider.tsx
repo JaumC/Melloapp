@@ -5,9 +5,11 @@ import { useRouter } from "expo-router";
 import axios from "axios";
 import { API_URL } from '@/utils/API_URL';
 import { notifyToast } from '@/utils/Toast';
+import { loadingHook } from './LoadingProvider';
+import { dareHook } from './DareProvider';
+
 interface UserProviderType {
   user: User | null;
-  loading: boolean;
   loginUser: (email: string, password: string) => void;
   recuperarUser: (email: string, senha: string, confirmarSenha: string) => void;
   addFriend: (userId: string) => void;
@@ -21,7 +23,6 @@ interface UserProviderType {
 
 export const UserContext = createContext<UserProviderType>({
   user: null,
-  loading: false,
   loginUser: () => { },
   addFriend: () => { },
   recuperarUser: () => { },
@@ -43,8 +44,10 @@ export default function UserSession({ children }: PropsWithChildren) {
 
   const router = useRouter();
 
+  const { setDare, readDare } = dareHook()
+
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const { setLoading, setBgVisible } = loadingHook()
 
   const createUser = async (formData: any) => {
     const name = formData.get("name");
@@ -164,6 +167,7 @@ export default function UserSession({ children }: PropsWithChildren) {
     }
 
     setLoading(true);
+    setBgVisible(false)
     try {
       const response = await axios.post(`${API_URL}/user/login`, { email, password }, { withCredentials: true });
 
@@ -171,17 +175,23 @@ export default function UserSession({ children }: PropsWithChildren) {
       await SecureStore.setItemAsync("user_data", JSON.stringify(response.data.user));
 
       setUser(response.data.user);
-      notifyToast("success", "Sucesso", response.data.message);
+      setDare([])
+      await readDare("")
 
+      setTimeout(() => {
+        setLoading(false)
+        setBgVisible(true)
+      }, 3500)
       router.push("/home");
+
     } catch (error: any) {
       if (error.response) {
         notifyToast("error", "Erro", error.response.data.message);
+        setLoading(false)
+        setBgVisible(true)
       } else {
         notifyToast("error", "Erro", "Erro ao se conectar com o servidor.");
       }
-    } finally {
-      setLoading(false)
     }
   };
 
@@ -190,7 +200,8 @@ export default function UserSession({ children }: PropsWithChildren) {
       await SecureStore.deleteItemAsync("token");
       await SecureStore.deleteItemAsync("user_data");
       setUser(null);
-      notifyToast("success", "Sucesso", "Usuário deslogado com sucesso.");
+      setDare([]);
+
       router.push("/");
     } catch {
       notifyToast("error", "Erro", "Erro ao deslogar.");
@@ -286,7 +297,6 @@ export default function UserSession({ children }: PropsWithChildren) {
     <UserContext.Provider
       value={{
         user,
-        loading,
         addFriend,
         removeFriend,
         recuperarUser,

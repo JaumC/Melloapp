@@ -8,14 +8,16 @@ import moment from 'moment'
 import { userHook } from '@/contexts/Providers/UserProvider'
 import { useRouter } from 'expo-router'
 import { dareHook } from '@/contexts/Providers/DareProvider'
+import { getTextColor } from '@/utils/TextColor'
 
 interface DareProps {
     dare?: Dare
-    dayPoints?: DayPoint 
+    dayPoints?: DayPoint
     onOpen?: () => void
+    home?: boolean
 }
 
-const DareCard = ({ dare, dayPoints, onOpen }: DareProps) => {
+const DareCard = ({ dare, dayPoints, onOpen, home = true }: DareProps) => {
     const days = generateDays(
         dare?.start_date || '',
         dare?.end_date || '',
@@ -26,7 +28,8 @@ const DareCard = ({ dare, dayPoints, onOpen }: DareProps) => {
 
     const { user } = userHook()
     const { addDay, removeDay } = dareHook()
-    
+
+    const textColor = getTextColor(user?.color || '#000000')
     const router = useRouter()
 
     const weekend = dare?.weekend ? 7 : 5
@@ -47,7 +50,7 @@ const DareCard = ({ dare, dayPoints, onOpen }: DareProps) => {
             return newSet;
         });
 
-        if (!dare?._id) return; 
+        if (!dare?._id) return;
 
         if (markedDays.has(dayId)) {
             await removeDay(dare?._id, dayId);
@@ -57,34 +60,45 @@ const DareCard = ({ dare, dayPoints, onOpen }: DareProps) => {
     };
 
     useEffect(() => {
-        console.log(dayPoints)
-        console.log(dayPoints?.days)
         if (!dayPoints?.days || !user) return
 
         const marked = new Set<string>()
 
         const allDays = dayPoints.days
-        for (const [date, entries] of Object.entries(allDays)){
+        for (const [date, entries] of Object.entries(allDays)) {
             if (Array.isArray(entries) && entries.some((e: { user_id: string }) => e.user_id === user.id)) {
                 marked.add(date)
             }
         }
         setMarkedDays(marked)
-        console.log(marked)
     }, [dayPoints, user])
-    console.log(markedDays)
+
+    const calcTotalMarked = (dayIndex: string) => {
+
+        const usersMarked = dayPoints?.days[dayIndex] || [];
+
+        const isUserMarked = usersMarked.some((entry) => entry.user_id === user?.id);
+
+        const totalMarked = isUserMarked ? usersMarked.length - 1 : usersMarked.length;
+
+        return totalMarked != 0 ? "+ " + totalMarked : "";
+    }
 
     return (
         <>
-            <TouchableOpacity onPress={onOpen} className='w-[95%] h-[32px] bg-[#A3BBA3] rounded-t-[8px] shadow-md shadow-black flex-row justify-between items-center mt-2 px-4'>
-                <View className='flex-row items-center'>
-                    <FontAwesome6 name="trophy" size={19} color="white" />
-                    <Spacer w={10} />
-                    <Text className="text-[#545252] my-2">{dare?.name}</Text>
-                </View>
-                <Feather /*onPress={() => router.push('/editDare')}*/ name="edit" size={20} color="#545252" />
-            </TouchableOpacity>
-            <View className='flex-col w-[95%] bg-[#F7E5E2] shadow-md shadow-black rounded-b-[8px]'>
+            {home && (
+                <TouchableOpacity onPress={onOpen} className='w-[95%] h-[32px] bg-[#A3BBA3] rounded-t-[8px] shadow-md shadow-black flex-row justify-between items-center mt-2 px-4'>
+                    <View className='flex-row items-center'>
+                        <FontAwesome6 name="trophy" size={19} color="white" />
+                        <Spacer w={10} />
+                        <Text className="text-[#545252] my-2">{dare?.name}</Text>
+                    </View>
+                    {dare?.host === user?.id && (
+                        <Feather /*onPress={() => router.push('/editDare')}*/ name="edit" size={20} color="#545252" />
+                    )}
+                </TouchableOpacity>
+            )}
+            <View style={{ borderTopLeftRadius: !home ? 8 : 0, borderTopRightRadius: !home ? 8 : 0 }}className='flex-col w-[95%] bg-[#F7E5E2] shadow-md shadow-black rounded-b-[8px]'>
                 <View className='w-[100%] flex-row content-start p-4 justify-start'>
                     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                         {(() => {
@@ -106,11 +120,16 @@ const DareCard = ({ dare, dayPoints, onOpen }: DareProps) => {
                                                 backgroundColor: markedDays.has(dayIndex) ? user?.color : '#D9D9D9',
                                                 borderWidth: markedDays.has(dayIndex) ? 0 : 1,
                                                 borderColor: today === dayIndex ? user?.color : '#D9D9D9',
+                                                opacity: today === dayIndex ? 1 : markedDays.has(dayIndex) ? 0.5 : 1,
                                             }}
                                             className='w-[30px] h-[30px] flex items-center justify-center rounded-md m-[3px]'>
                                             {today === dayIndex && !markedDays.has(dayIndex) && (
                                                 <Feather name="check" size={15} color={user?.color} />
                                             )}
+                                            {(today > dayIndex && !home) && (
+                                                <Text style={{ color: textColor, fontSize: 10 }}>{calcTotalMarked(dayIndex)}</Text>
+                                            )}
+
                                         </TouchableOpacity>
                                     ))}
 
@@ -127,10 +146,12 @@ const DareCard = ({ dare, dayPoints, onOpen }: DareProps) => {
                     </ScrollView>
 
                 </View>
-                <View className='flex-row w-full justify-between px-4 pb-2'>
-                    <Text className='text-[#545252]'>{dare?.days + 'D'}</Text>
-                    <Text className='text-[#545252]'>{dare?.streak + 'PTS'}</Text>
-                </View>
+                {home && (
+                    <View className='flex-row w-full justify-between px-4 pb-2'>
+                        <Text className='text-[#545252]'>{dare?.days + 'D'}</Text>
+                        <Text className='text-[#545252]'>{dare?.streak + 'PTS'}</Text>
+                    </View>
+                )}
             </View>
         </>
     )

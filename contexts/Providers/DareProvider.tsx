@@ -1,19 +1,19 @@
-import { createContext, useState, PropsWithChildren, useContext } from 'react';
+import { createContext, useState, PropsWithChildren, useContext, useEffect } from 'react';
 import { notifyToast } from '@/utils/Toast';
 import { API_URL } from '@/utils/API_URL';
 import { Dare, DareWithDayPoints } from '@/utils/Typos';
 import axios from 'axios';
 import { userHook } from './UserProvider';
+import { loadingHook } from './LoadingProvider';
 
 
 interface DareProviderType {
   dare: DareWithDayPoints[];
   setDare: (d: DareWithDayPoints[]) => void;
-  loading: boolean;
   createDare: (data: any) => void;
   addDay: (daraeId: string, data: string) => void;
   removeDay: (daraeId: string, data: string) => void;
-  readDare: () => void;
+  readDare: (dare_id: string) => void;
   updateDare: () => void;
   deleteDare: () => void;
 }
@@ -21,7 +21,6 @@ interface DareProviderType {
 export const DareContext = createContext<DareProviderType>({
   dare: [],
   setDare: () => { },
-  loading: false,
   createDare: () => { },
   addDay: () => { },
   removeDay: () => { },
@@ -39,7 +38,8 @@ export default function DareSession({ children }: PropsWithChildren) {
   console.log('Sessão de Desafio');
 
   const [dare, setDare] = useState<DareWithDayPoints[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+
+  const { setLoading } = loadingHook()
 
   const { user } = userHook()
 
@@ -52,7 +52,7 @@ export default function DareSession({ children }: PropsWithChildren) {
     setLoading(true)
     await axios.post(`${API_URL}/dare/create`, dataDare)
       .then((response) => {
-        readDare()
+        readDare("")
         notifyToast("success", "Sucesso", response.data.message);
       })
       .catch((error) => {
@@ -63,10 +63,9 @@ export default function DareSession({ children }: PropsWithChildren) {
       })
   }
 
-  const readDare = async () => {
-    setLoading(true)
+  const readDare = async (dare_id: string) => {
     try {
-      const response = await axios.get(`${API_URL}/dare/read/${user?.id}`, {
+      const response = await axios.get(`${API_URL}/dare/read/${user?.id}?dareId=${dare_id}`, {
         withCredentials: true,
       })
       const formated = response.data.dare.map((d: any, index: number) => ({
@@ -79,8 +78,6 @@ export default function DareSession({ children }: PropsWithChildren) {
 
     } catch (error: any) {
       notifyToast("error", "Erro", error.response.data.message || 'Erro ao se conectar com o servidor.');
-    } finally {
-      setLoading(false)
     }
   };
 
@@ -91,7 +88,7 @@ export default function DareSession({ children }: PropsWithChildren) {
         withCredentials: true,
       });
 
-      await readDare()
+      await readDare("")
       notifyToast("success", "Sucesso", response.data.message);
 
     } catch (error: any) {
@@ -108,7 +105,7 @@ export default function DareSession({ children }: PropsWithChildren) {
         withCredentials: true,
       });
 
-      await readDare()
+      await readDare("")
       notifyToast("success", "Sucesso", response.data.message);
 
     } catch (error: any) {
@@ -131,7 +128,6 @@ export default function DareSession({ children }: PropsWithChildren) {
       value={{
         dare,
         setDare,
-        loading,
         createDare,
         addDay,
         removeDay,

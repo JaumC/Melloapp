@@ -1,5 +1,5 @@
 
-import { View, Text, TouchableOpacity, StatusBar } from 'react-native';
+import { View, Text, TouchableOpacity, StatusBar, Keyboard } from 'react-native';
 import React, { useState } from 'react';
 import { useRouter } from 'expo-router';
 
@@ -17,6 +17,7 @@ export default function Login() {
   const router = useRouter();
 
   const handleLogin = async () => {
+    Keyboard.dismiss()
     await loginUser(email, senha)
   }
 

@@ -1,5 +1,4 @@
 import { View, Text, ScrollView, StatusBar } from 'react-native';
-import { useEffect, useState } from 'react';
 
 import { useRouter } from "expo-router";
 
@@ -8,15 +7,25 @@ import Spacer from '@/components/Spacer/Spacer';
 import { dareHook } from '@/contexts/Providers/DareProvider';
 import Line from '@/components/Line/Line';
 import DareCard from '@/components/Dare/DareCard';
+import { useEffect, useState } from 'react';
+import { userHook } from '@/contexts/Providers/UserProvider';
 
 export default function Home() {
-  const router = useRouter();
 
-  const { readDare, dare } = dareHook()
+  const { readDare } = dareHook()
+  const { user } = userHook()
+  const [ dare, setDare ] = useState<any>([])
+
+  const router = useRouter()
+
+  const getOneDare = async () => {
+    const response = await readDare("")
+    setDare(response)
+  }
 
   useEffect(() => {
-    readDare()
-  }, [])
+      getOneDare()
+  }, [user?.id])
 
   return (
     <View className='bg-[#fafafa] flex-1 w-full items-center'>
@@ -27,7 +36,7 @@ export default function Home() {
       <Line />
       <Spacer h={20} />
 
-      {dare ? (
+      {dare.length > 0 ? (
         <ScrollView showsVerticalScrollIndicator={false} className="w-full px-2">
           {dare?.map((d: any) => (
             <View key={d?.dare._id} className='w-full flex justify-center items-center mb-4'>
