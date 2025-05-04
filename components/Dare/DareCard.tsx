@@ -87,14 +87,16 @@ const DareCard = ({ dare, dayPoints, onOpen, home = true }: DareProps) => {
     return (
         <>
             {home && (
-                <TouchableOpacity onPress={onOpen} className='w-[95%] h-[32px] bg-[#A3BBA3] rounded-t-[8px] shadow-md shadow-black flex-row justify-between items-center mt-2 px-4'>
+                <TouchableOpacity onPress={onOpen} className='w-[95%] h-[32px] bg-[#A3BBA3] rounded-t-[8px] shadow-md shadow-black flex-row justify-between items-center mt-2 pl-4'>
                     <View className='flex-row items-center'>
                         <FontAwesome6 name="trophy" size={19} color="white" />
                         <Spacer w={10} />
                         <Text className="text-[#545252] my-2">{dare?.name}</Text>
                     </View>
                     {dare?.host === user?.id && (
-                        <Feather /*onPress={() => router.push('/editDare')}*/ name="edit" size={20} color="#545252" />
+                        <TouchableOpacity className='h-full flex items-center justify-center w-[50px]' onPress={() => router.push(`/editarDesafio/${dare?._id}`)}>
+                            <Feather name="edit" size={20} color="#545252" />
+                        </TouchableOpacity>
                     )}
                 </TouchableOpacity>
             )}

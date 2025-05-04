@@ -1,19 +1,24 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import Spacer from '@/components/Spacer/Spacer';
 
 interface SwitchButtonProps {
+  value?: boolean;
   onChangeSwitch?: (text: boolean) => void
 }
 
-const SwitchButton = ({ onChangeSwitch }: SwitchButtonProps) => {
-  const [isEnabled, setIsEnabled] = useState(true);
+const SwitchButton = ({ onChangeSwitch, value }: SwitchButtonProps) => {
+  const [isEnabled, setIsEnabled] = useState(value);
+
+  useEffect(() => {
+    setIsEnabled(value)
+  }, [value])
 
   function toggleSwitch() {
     setIsEnabled((prev) => {
       const newValue = !prev;
       if (onChangeSwitch) {
-        onChangeSwitch(newValue); // Notifica a mudança
+        onChangeSwitch(newValue);
       }
       return newValue;
     });

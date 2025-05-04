@@ -136,8 +136,7 @@ export default function UserSession({ children }: PropsWithChildren) {
     }
   }
 
-  const readFriends = async (searchFriends: string) => {
-    setLoading(true);
+  const readFriends = async (searchFriends: string): Promise<User[]> => {
     try {
       const response = await axios.get(`${API_URL}/user/readfriends`, {
         params: {
@@ -155,8 +154,6 @@ export default function UserSession({ children }: PropsWithChildren) {
         notifyToast("error", "Erro", "Erro ao se conectar com o servidor.");
       }
       return []
-    } finally {
-      setLoading(false)
     }
   }
 
@@ -224,8 +221,6 @@ export default function UserSession({ children }: PropsWithChildren) {
       const response = await axios.post(`${API_URL}/user/recover`, { email, senha, confirmarSenha }, { withCredentials: true })
 
       setUser(response.data.user);
-      console.log(response.data.user)
-      console.log(response)
       notifyToast("success", "Sucesso", response.data.message);
 
       router.push("/");

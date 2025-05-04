@@ -53,6 +53,15 @@ export default function Layout() {
                 headerTintColor: '#fafafa',
                 headerTitle: '',
               }} />
+              <Stack.Screen
+              name="editarDesafio/[id]"
+              options={{
+                headerStyle: {
+                  backgroundColor: '#C4A59D',
+                },
+                headerTintColor: '#fafafa',
+                headerTitle: '',
+              }} />
           </Stack>
           <Toast />
           <Loading />

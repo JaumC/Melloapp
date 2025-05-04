@@ -6,9 +6,10 @@ interface ModalProps {
   modal?: boolean;
   children?: React.ReactNode;
   onOpen?: (modal: boolean) => void;
+  h?: number;
 }
 
-const Modal = ({ modal, children, onOpen }: ModalProps) => {
+const Modal = ({ modal, children, onOpen, h=500 }: ModalProps) => {
   if (!modal) return null;
 
   return (
@@ -20,7 +21,7 @@ const Modal = ({ modal, children, onOpen }: ModalProps) => {
         className="absolute inset-0 bg-black opacity-50"
       />
 
-      <View className="bg-white h-[500px] w-[95%] rounded-lg z-50 p-4 pb-6">
+      <View style={{height: h}} className="bg-white w-[95%] rounded-lg z-50 p-4 pb-6">
         <TouchableOpacity onPress={() => onOpen?.(false)} className=" self-end">
           <Text className="text-red-500 font-bold">
               <AntDesign name="close" size={24} color="black" />

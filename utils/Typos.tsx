@@ -1,5 +1,5 @@
 export interface User {
-    id?: string;
+    id: string;
     name?: string;
     email?: string;
     tot_score?: string;
@@ -24,10 +24,10 @@ export interface Dare {
     end_date?: string;
     days?: string;
     weekend?: boolean;
-    friends?: string[];
+    challengers?: string[];
     host?: string;
-    sequencyDay?: string;
-    sequencyMounth?: string;
+    day_sequency?: string;
+    mounth_sequency?: string;
     streak?: string;
     finishedDare?: boolean;
 }

@@ -13,6 +13,7 @@ export default function DarePage() {
 
   const { readDare } = dareHook()
   const { setLoading } = loadingHook()
+  
   const [dataCard, setDareDataCard] = useState<any>(null)
 
   const calculateDaysLeft = (endDateStr: string) => {

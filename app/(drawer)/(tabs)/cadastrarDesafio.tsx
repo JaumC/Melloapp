@@ -16,6 +16,8 @@ import { API_URL } from '@/utils/API_URL'
 import SmallButton from '@/components/Buttons/SmallButton'
 import Feather from '@expo/vector-icons/Feather'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { User } from '@/utils/Typos'
+import { getDiffDays } from '@/utils/GetDifDays'
 
 export default function CadastrarDesafio() {
 
@@ -29,7 +31,7 @@ export default function CadastrarDesafio() {
   const [dataEnd, setDataEnd] = useState('')
   const [onWeekends, setOnWeekends] = useState(true)
   const [days, setDays] = useState('')
-  const [friends, setFriends] = useState<{ _id: string; nickname: string; search_id: string }[]>([])
+  const [friends, setFriends] = useState<User[]>([])
 
   const [dareName, setDareName] = useState('')
 
@@ -39,39 +41,9 @@ export default function CadastrarDesafio() {
   const [dareStreak, setDareStreak] = useState('')
 
   const selectedNicknames = friends
-    .filter((f) => selectedFriends.has(f._id))
-    .map((f) => f.nickname.toUpperCase())
+    .filter((f) => selectedFriends.has(f.id))
+    .map((f) => (f.nickname ?? '').toUpperCase())
     .join(', ');
-
-  const getDiffDays = () => {
-    if (!dataStart || !dataEnd) return;
-    if (dataStart > dataEnd) {
-      notifyToast('error', 'Erro', 'A data incial deve ser menor do que a final.')
-    };
-
-    const [startDay, startMonth, startYear] = dataStart.split('/').map(Number);
-    const [endDay, endMonth, endYear] = dataEnd.split('/').map(Number);
-
-    const start = new Date(startYear, startMonth - 1, startDay);
-    const end = new Date(endYear, endMonth - 1, endDay);
-
-    start.setHours(0, 0, 0, 0);
-    end.setHours(0, 0, 0, 0);
-
-    // const diffDays = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1;
-
-    let businessDays = 0;
-
-    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-      const dayOfWeek = d.getDay(); // 0 = Domingo, 6 = Sábado
-
-      if (onWeekends || (dayOfWeek !== 0 && dayOfWeek !== 6)) {
-        businessDays++;
-      }
-    }
-
-    setDays(businessDays.toString())
-  };
 
   const handleRegister = async () => {
     const dareData = {
@@ -80,10 +52,10 @@ export default function CadastrarDesafio() {
       end_date: dataEnd,
       days: days,
       weekend: onWeekends,
-      friends: Array.from(selectedFriends),
+      challengers: Array.from(selectedFriends) as string[],
       host: user?.id,
-      sequencyDay: dareSequenceDay,
-      sequencyMounth: dareSequenceMounth,
+      day_sequency: dareSequenceDay,
+      mounth_sequency: dareSequenceMounth,
       streak: dareStreak,
     }
 
@@ -126,7 +98,8 @@ export default function CadastrarDesafio() {
   }
 
   useEffect(() => {
-    getDiffDays()
+    const businessDays = getDiffDays(dataStart, dataEnd, onWeekends) || ''
+    setDays(businessDays)
   }, [dataStart, dataEnd, onWeekends])
 
   useEffect(() => {
@@ -189,7 +162,7 @@ export default function CadastrarDesafio() {
             <InputText text={`${selectedFriends?.size + 1}/8`} w={65} />
           </View>
           <Spacer h={25} />
-          <SwitchButton onChangeSwitch={setOnWeekends} />
+          <SwitchButton value={onWeekends} onChangeSwitch={setOnWeekends} />
           <Spacer h={30} />
           <Line />
           <Spacer h={40} />
