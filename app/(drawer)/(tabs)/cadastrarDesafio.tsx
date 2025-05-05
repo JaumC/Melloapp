@@ -56,7 +56,7 @@ export default function CadastrarDesafio() {
       host: user?.id,
       day_sequency: dareSequenceDay,
       mounth_sequency: dareSequenceMounth,
-      streak: dareStreak,
+      streak: Number(dareStreak),
     }
 
     await createDare(dareData)

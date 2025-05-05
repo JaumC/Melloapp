@@ -28,7 +28,7 @@ export interface Dare {
     host?: string;
     day_sequency?: string;
     mounth_sequency?: string;
-    streak?: string;
+    streak?: number;
     finishedDare?: boolean;
 }
 

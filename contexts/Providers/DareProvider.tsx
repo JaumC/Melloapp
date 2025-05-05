@@ -17,7 +17,7 @@ interface DareProviderType {
   readDare: (dare_id: string) => Promise<DareWithDayPoints[]>;
   updateDare: (dareEditData: Dare, dare_id: any) => void;
   deleteDare: () => void;
-  readChallengers: (challengers: Array<string>) => void;
+  readRank: (dare_id: string) => void;
 }
 
 export const DareContext = createContext<DareProviderType>({
@@ -29,7 +29,7 @@ export const DareContext = createContext<DareProviderType>({
   readDare: async () => [],
   updateDare: () => { },
   deleteDare: () => { },
-  readChallengers: () => { },
+  readRank: () => { },
 });
 
 export const dareHook = () => {
@@ -137,14 +137,12 @@ export default function DareSession({ children }: PropsWithChildren) {
 
   }
 
-  const readChallengers = async (challengers: Array<string>): Promise<User[]> => {
-    setLoading(true);
-    console.log(challengers)
+  const readRank = async (dare_id: string) => {
     try {
-      const response = await axios.get(`${API_URL}/dare/challengers?ids=${challengers}`, {
+      const response = await axios.get(`${API_URL}/dare/rank?id=${dare_id}`, {
         withCredentials: true
       });
-      return response.data.users
+      return response.data.ranking
 
     } catch (error: any) {
       if (error.response) {
@@ -153,8 +151,6 @@ export default function DareSession({ children }: PropsWithChildren) {
         notifyToast("error", "Erro", "Erro ao se conectar com o servidor.");
       }
       return []
-    } finally {
-      setLoading(false)
     }
   }
 
@@ -169,7 +165,7 @@ export default function DareSession({ children }: PropsWithChildren) {
         readDare,
         updateDare,
         deleteDare,
-        readChallengers,
+        readRank,
       }}>
       {children}
     </DareContext.Provider>

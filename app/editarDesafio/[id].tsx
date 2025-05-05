@@ -23,7 +23,7 @@ import { getDiffDays } from '@/utils/GetDifDays'
 export default function EditarDesafio() {
   const { id } = useLocalSearchParams();
 
-  const { readDare, updateDare, readChallengers } = dareHook()
+  const { readDare, updateDare } = dareHook()
   const { readFriends } = userHook()
 
   const { setLoading } = loadingHook()
@@ -64,7 +64,7 @@ export default function EditarDesafio() {
       challengers: Array.from(selectedFriends) as string[],
       day_sequency: newDareSequenceDay,
       mounth_sequency: newDareSequenceMounth,
-      streak: newDareStreak,
+      streak: Number(newDareStreak),
     }
 
     await updateDare(dareEditData, id)
@@ -119,7 +119,7 @@ export default function EditarDesafio() {
     setNewOnWeekends(dare?.weekend ?? true);
     setNewDareSequenceDay(dare?.day_sequency || '');
     setNewDareSequenceMounth(dare?.mounth_sequency || '');
-    setNewDareStreak(dare?.streak || '');
+    setNewDareStreak(String(dare?.streak) || '');
 
     const challengers = dare?.challengers ?? []
     const fullFriends: any = await readFriends('');
