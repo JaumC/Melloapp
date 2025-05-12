@@ -60,7 +60,7 @@ export default function DarePage() {
 
           <View className="w-[90%] h-[32px] bg-[#A3BBA3] rounded-[8px] shadow-md shadow-black flex-row justify-between items-center px-4">
             <Text className="text-black my-2">
-              {dataCard?.dare?.days}/{calculateDaysLeft(dataCard?.dare?.end_date)} Dias Restantes
+            {calculateDaysLeft(dataCard?.dare?.end_date)}/{dataCard?.dare?.days} Dias Restantes
             </Text>
             <Spacer w={10} />
             <Text className="text-[#545252] my-2">{dataCard?.dare?.streak} PTS</Text>
