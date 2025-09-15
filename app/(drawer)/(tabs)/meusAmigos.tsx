@@ -7,7 +7,7 @@ import { useRouter } from "expo-router";
 import Spacer from '@/components/Spacer/Spacer';
 import Line from '@/components/Line/Line';
 import Input from '@/components/Input/Input';
-import { API_URL } from '@/utils/API_URL';
+import { API_URL } from '@/utils/Constants';
 import ProfileButton from '@/components/Buttons/ProfileButton';
 import SmallButton from '@/components/Buttons/SmallButton';
 
@@ -25,8 +25,8 @@ export default function MeusAmigos() {
   const { readFriends, removeFriend, user } = userHook();
 
   const searchFriends = async () => {
-      const response: any = await readFriends(search);
-      setFriends(response);
+    const response: any = await readFriends(search);
+    setFriends(response);
   };
 
   const handleRemoveFriend = async (userId: string) => {
@@ -46,7 +46,7 @@ export default function MeusAmigos() {
     if (isFriend) {
       await removeFriend(userId);
       searchFriends()
-    } 
+    }
   }
 
   useEffect(() => {

@@ -1,6 +1,6 @@
 import { createContext, useState, PropsWithChildren, useContext, useEffect } from 'react';
-import { notifyToast } from '@/utils/Toast';
-import { API_URL } from '@/utils/API_URL';
+import { notifyToast } from '@/components/Toast/Toast';
+import { API_URL } from '@/utils/Constants';
 import { Dare, DareWithDayPoints, User } from '@/utils/Typos';
 import axios from 'axios';
 import { userHook } from './UserProvider';
@@ -41,7 +41,7 @@ export default function DareSession({ children }: PropsWithChildren) {
   const [dare, setDare] = useState<DareWithDayPoints[]>([]);
 
   const { setLoading } = loadingHook()
-  
+
   const { user } = userHook()
   const router = useRouter()
 

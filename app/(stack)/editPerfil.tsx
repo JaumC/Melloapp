@@ -16,8 +16,8 @@ import { useRouter, useFocusEffect } from 'expo-router';
 
 import * as ImagePicker from "expo-image-picker";
 
-import { API_URL } from '../../utils/API_URL';
-import { notifyToast } from '@/utils/Toast';
+import { API_URL } from '../../utils/Constants';
+import { notifyToast } from '@/components/Toast/Toast';
 import { userHook } from '@/contexts/Providers/UserProvider';
 
 export default function EditPerfil() {

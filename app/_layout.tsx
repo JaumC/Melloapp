@@ -3,7 +3,7 @@ import { Stack } from "expo-router";
 import '../global.css';
 
 import { SafeAreaView, View } from "react-native";
-import Loading from "@/utils/Loading";
+import Loading from "@/components/Loading/Loading";
 import GlobalContext from '@/contexts/GlobalContext'
 
 

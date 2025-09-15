@@ -4,7 +4,7 @@ import Line from '@/components/Line/Line';
 import Spacer from '@/components/Spacer/Spacer';
 import { dareHook } from '@/contexts/Providers/DareProvider';
 import { loadingHook } from '@/contexts/Providers/LoadingProvider';
-import { API_URL } from '@/utils/API_URL';
+import { API_URL } from '@/utils/Constants';
 import { calculateDaysLeft } from '@/utils/CalculateDaysLeft';
 import { getTextColor } from '@/utils/TextColor';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';

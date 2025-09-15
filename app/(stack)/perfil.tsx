@@ -13,8 +13,8 @@ import Feather from '@expo/vector-icons/Feather';
 import { useFocusEffect, useRouter } from 'expo-router'
 
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
-import { notifyToast } from '@/utils/Toast'
-import { API_URL } from '../../utils/API_URL';
+import { notifyToast } from '@/components/Toast/Toast'
+import { API_URL } from '../../utils/Constants';
 import { userHook } from '@/contexts/Providers/UserProvider';
 
 export default function Perfil() {
@@ -66,7 +66,7 @@ export default function Perfil() {
 
           <Text className='font-cormorantSC text-[20px]'>perfil</Text>
           <Spacer h={24} />
-          <View style={{borderColor: user?.color }} className='flex-row p-[4px] rounded-full border-[2px]'>
+          <View style={{ borderColor: user?.color }} className='flex-row p-[4px] rounded-full border-[2px]'>
             <ProfileButton profilePic={profilePic} text='IMAGEM' />
           </View>
           <View className='absolute right-[50px] top-[115px]'>

@@ -1,5 +1,8 @@
+import { AxiosError, AxiosResponse } from "axios";
+
 export interface User {
     id: string;
+    token?: string;
     name?: string;
     email?: string;
     tot_score?: string;
@@ -43,3 +46,14 @@ export interface DayEntry {
     marked_at: Date;
     points: number;
 }
+
+export interface ApiResponse<T = any> {
+  type: string;
+  title: string;
+  message: string;
+  content?: T;
+}
+
+
+export type ApiAxiosResponse<T = any> = AxiosResponse<ApiResponse<T>>;
+export type ApiAxiosError<T = any> = AxiosError<ApiResponse<T>>;

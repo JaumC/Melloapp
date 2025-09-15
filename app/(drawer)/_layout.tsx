@@ -7,7 +7,7 @@ import Spacer from '@/components/Spacer/Spacer';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useState, useCallback } from 'react';
 import { userHook } from '@/contexts/Providers/UserProvider';
-import { API_URL } from '@/utils/API_URL';
+import { API_URL } from '@/utils/Constants';
 
 export default function Layout() {
 

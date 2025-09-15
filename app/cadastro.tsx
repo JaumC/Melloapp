@@ -10,7 +10,7 @@ import Line from '@/components/Line/Line'
 import * as ImagePicker from "expo-image-picker";
 
 import React, { useState } from 'react'
-import { notifyToast } from '../utils/Toast';
+import { notifyToast } from '../components/Toast/Toast';
 import ProfileButton from '../components/Buttons/ProfileButton';
 import { userHook } from '@/contexts/Providers/UserProvider'
 

@@ -6,7 +6,7 @@ import { useRouter } from "expo-router";
 import Spacer from '@/components/Spacer/Spacer';
 import Line from '@/components/Line/Line';
 import Input from '@/components/Input/Input';
-import { API_URL } from '@/utils/API_URL';
+import { API_URL } from '@/utils/Constants';
 import ProfileButton from '@/components/Buttons/ProfileButton';
 import SmallButton from '@/components/Buttons/SmallButton';
 
