@@ -1,4 +1,4 @@
-import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
+import { DrawerContentScrollView, DrawerItem } from "expo-router/drawer";
 import { View, Text } from "react-native";
 import { useFocusEffect, useRouter } from "expo-router";
 import SmallButton from "@/components/Buttons/SmallButton";

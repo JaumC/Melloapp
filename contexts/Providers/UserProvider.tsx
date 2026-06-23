@@ -1,11 +1,10 @@
 import { createContext, useState, PropsWithChildren, useEffect, useContext } from 'react';
 import { notifyApiToast, notifyToast } from '@/components/Toast/Toast';
-import { AxiosCatchError } from '@/app/axios/AxiosCatchError';
-import { AxiosInstance } from '@/app/axios/AxiosInstance';
+import { AxiosCatchError } from '@/utils/AxiosCatchError';
+import { AxiosInstance } from '@/utils/AxiosInstance';
 import { ApiAxiosResponse, User } from '@/utils/Typos';
 import * as SecureStore from "expo-secure-store";
 import { loadingHook } from './LoadingProvider';
-import { dareHook } from './DareProvider';
 import { useRouter } from "expo-router";
 
 interface UserProviderType {
@@ -44,7 +43,6 @@ export default function UserSession({ children }: PropsWithChildren) {
 
   const [user, setUser] = useState<User | null>(null);
 
-  const { setDare, readDare } = dareHook();
   const { setLoading, setBgVisible } = loadingHook();
 
   const createUser = async (formData: FormData) => {
@@ -137,9 +135,6 @@ export default function UserSession({ children }: PropsWithChildren) {
       await SecureStore.setItemAsync("user_data", JSON.stringify(response.data.content));
 
       setUser(response.data.content ?? null);
-      setDare([])
-
-      await readDare("")
 
       setTimeout(() => {
         setLoading(false)
@@ -158,7 +153,6 @@ export default function UserSession({ children }: PropsWithChildren) {
       await SecureStore.deleteItemAsync("token");
       await SecureStore.deleteItemAsync("user_data");
       setUser(null);
-      setDare([]);
 
       router.push("/");
     }

@@ -2,7 +2,8 @@ import Toast from 'react-native-toast-message';
 import { Stack } from "expo-router";
 import '../global.css';
 
-import { SafeAreaView, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { View } from "react-native";
 import Loading from "@/components/Loading/Loading";
 import GlobalContext from '@/contexts/GlobalContext'
 
